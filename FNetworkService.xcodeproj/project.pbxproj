@@ -7,13 +7,41 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2474118968E9E44C81C6274F /* libPods-FNetworkService.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4386EB8E85EFFF3F3E764E5 /* libPods-FNetworkService.a */; };
 		5CDF4DF22270954A006C1764 /* FNetworkService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5CDF4DF02270954A006C1764 /* FNetworkService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5CDF4DFA22709979006C1764 /* GenericStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DF922709979006C1764 /* GenericStorage.swift */; };
+		5CDF4E0822709982006C1764 /* Optional+stringValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DFC22709982006C1764 /* Optional+stringValue.swift */; };
+		5CDF4E0922709982006C1764 /* JSONEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DFD22709982006C1764 /* JSONEncoding.swift */; };
+		5CDF4E0A22709982006C1764 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DFE22709982006C1764 /* APIError.swift */; };
+		5CDF4E0B22709982006C1764 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DFF22709982006C1764 /* Result.swift */; };
+		5CDF4E0C22709982006C1764 /* NetworkSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0022709982006C1764 /* NetworkSettings.swift */; };
+		5CDF4E0D22709982006C1764 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0122709982006C1764 /* HTTPHeader.swift */; };
+		5CDF4E0E22709982006C1764 /* AdditionalSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0222709982006C1764 /* AdditionalSettings.swift */; };
+		5CDF4E0F22709982006C1764 /* LoggerWriteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0322709982006C1764 /* LoggerWriteOptions.swift */; };
+		5CDF4E1022709982006C1764 /* EndpointProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0522709982006C1764 /* EndpointProtocol.swift */; };
+		5CDF4E1122709982006C1764 /* PresentableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0622709982006C1764 /* PresentableError.swift */; };
+		5CDF4E1222709982006C1764 /* LoggerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0722709982006C1764 /* LoggerProtocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		003BE1DD5C3182BEC54619FA /* Pods-FNetworkService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FNetworkService.debug.xcconfig"; path = "Target Support Files/Pods-FNetworkService/Pods-FNetworkService.debug.xcconfig"; sourceTree = "<group>"; };
+		05B31105F6D1CE3F13A0AB06 /* Pods-FNetworkService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FNetworkService.release.xcconfig"; path = "Target Support Files/Pods-FNetworkService/Pods-FNetworkService.release.xcconfig"; sourceTree = "<group>"; };
 		5CDF4DED2270954A006C1764 /* FNetworkService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FNetworkService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CDF4DF02270954A006C1764 /* FNetworkService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FNetworkService.h; sourceTree = "<group>"; };
 		5CDF4DF12270954A006C1764 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5CDF4DF922709979006C1764 /* GenericStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericStorage.swift; sourceTree = "<group>"; };
+		5CDF4DFC22709982006C1764 /* Optional+stringValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Optional+stringValue.swift"; sourceTree = "<group>"; };
+		5CDF4DFD22709982006C1764 /* JSONEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONEncoding.swift; sourceTree = "<group>"; };
+		5CDF4DFE22709982006C1764 /* APIError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		5CDF4DFF22709982006C1764 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		5CDF4E0022709982006C1764 /* NetworkSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkSettings.swift; sourceTree = "<group>"; };
+		5CDF4E0122709982006C1764 /* HTTPHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPHeader.swift; sourceTree = "<group>"; };
+		5CDF4E0222709982006C1764 /* AdditionalSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdditionalSettings.swift; sourceTree = "<group>"; };
+		5CDF4E0322709982006C1764 /* LoggerWriteOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerWriteOptions.swift; sourceTree = "<group>"; };
+		5CDF4E0522709982006C1764 /* EndpointProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointProtocol.swift; sourceTree = "<group>"; };
+		5CDF4E0622709982006C1764 /* PresentableError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentableError.swift; sourceTree = "<group>"; };
+		5CDF4E0722709982006C1764 /* LoggerProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerProtocols.swift; sourceTree = "<group>"; };
+		D4386EB8E85EFFF3F3E764E5 /* libPods-FNetworkService.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FNetworkService.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -21,17 +49,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2474118968E9E44C81C6274F /* libPods-FNetworkService.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		083A05F0668321DB36906373 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D4386EB8E85EFFF3F3E764E5 /* libPods-FNetworkService.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		5CDF4DE32270954A006C1764 = {
 			isa = PBXGroup;
 			children = (
 				5CDF4DEF2270954A006C1764 /* FNetworkService */,
 				5CDF4DEE2270954A006C1764 /* Products */,
+				75C9215F3D3945930CC7E7D5 /* Pods */,
+				083A05F0668321DB36906373 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -46,10 +85,55 @@
 		5CDF4DEF2270954A006C1764 /* FNetworkService */ = {
 			isa = PBXGroup;
 			children = (
+				5CDF4E0422709982006C1764 /* Protocols */,
+				5CDF4DFB22709982006C1764 /* Supporting */,
+				5CDF4DF822709979006C1764 /* Caching */,
 				5CDF4DF02270954A006C1764 /* FNetworkService.h */,
 				5CDF4DF12270954A006C1764 /* Info.plist */,
 			);
 			path = FNetworkService;
+			sourceTree = "<group>";
+		};
+		5CDF4DF822709979006C1764 /* Caching */ = {
+			isa = PBXGroup;
+			children = (
+				5CDF4DF922709979006C1764 /* GenericStorage.swift */,
+			);
+			path = Caching;
+			sourceTree = "<group>";
+		};
+		5CDF4DFB22709982006C1764 /* Supporting */ = {
+			isa = PBXGroup;
+			children = (
+				5CDF4DFC22709982006C1764 /* Optional+stringValue.swift */,
+				5CDF4DFD22709982006C1764 /* JSONEncoding.swift */,
+				5CDF4DFE22709982006C1764 /* APIError.swift */,
+				5CDF4DFF22709982006C1764 /* Result.swift */,
+				5CDF4E0022709982006C1764 /* NetworkSettings.swift */,
+				5CDF4E0122709982006C1764 /* HTTPHeader.swift */,
+				5CDF4E0222709982006C1764 /* AdditionalSettings.swift */,
+				5CDF4E0322709982006C1764 /* LoggerWriteOptions.swift */,
+			);
+			path = Supporting;
+			sourceTree = "<group>";
+		};
+		5CDF4E0422709982006C1764 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				5CDF4E0522709982006C1764 /* EndpointProtocol.swift */,
+				5CDF4E0622709982006C1764 /* PresentableError.swift */,
+				5CDF4E0722709982006C1764 /* LoggerProtocols.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		75C9215F3D3945930CC7E7D5 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				003BE1DD5C3182BEC54619FA /* Pods-FNetworkService.debug.xcconfig */,
+				05B31105F6D1CE3F13A0AB06 /* Pods-FNetworkService.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -70,6 +154,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5CDF4DF52270954A006C1764 /* Build configuration list for PBXNativeTarget "FNetworkService" */;
 			buildPhases = (
+				9D9E08CED473652081F0945C /* [CP] Check Pods Manifest.lock */,
 				5CDF4DE82270954A006C1764 /* Headers */,
 				5CDF4DE92270954A006C1764 /* Sources */,
 				5CDF4DEA2270954A006C1764 /* Frameworks */,
@@ -125,11 +210,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		9D9E08CED473652081F0945C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-FNetworkService-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		5CDF4DE92270954A006C1764 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CDF4E1122709982006C1764 /* PresentableError.swift in Sources */,
+				5CDF4E1222709982006C1764 /* LoggerProtocols.swift in Sources */,
+				5CDF4E0822709982006C1764 /* Optional+stringValue.swift in Sources */,
+				5CDF4E0B22709982006C1764 /* Result.swift in Sources */,
+				5CDF4E1022709982006C1764 /* EndpointProtocol.swift in Sources */,
+				5CDF4E0A22709982006C1764 /* APIError.swift in Sources */,
+				5CDF4DFA22709979006C1764 /* GenericStorage.swift in Sources */,
+				5CDF4E0922709982006C1764 /* JSONEncoding.swift in Sources */,
+				5CDF4E0E22709982006C1764 /* AdditionalSettings.swift in Sources */,
+				5CDF4E0D22709982006C1764 /* HTTPHeader.swift in Sources */,
+				5CDF4E0C22709982006C1764 /* NetworkSettings.swift in Sources */,
+				5CDF4E0F22709982006C1764 /* LoggerWriteOptions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +382,7 @@
 		};
 		5CDF4DF62270954A006C1764 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 003BE1DD5C3182BEC54619FA /* Pods-FNetworkService.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
@@ -285,6 +408,7 @@
 		};
 		5CDF4DF72270954A006C1764 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 05B31105F6D1CE3F13A0AB06 /* Pods-FNetworkService.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
