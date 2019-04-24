@@ -3,12 +3,12 @@ Pod::Spec.new do |s|
   s.platform                 = :ios
   s.ios.deployment_target    = '9.0'
   s.name                     = "FNetworkService"
-  s.version                  = "0.0.1"
-  s.summary                  = "NetworkService is a wrapper around Alamofire with generic Codable Result"
+  s.version                  = "0.0.2"
+  s.summary                  = "Is a wrapper around Alamofire"
   s.requires_arc             = true
 
   s.description  = <<-DESC
-  networking
+  FNetworkService is wrapper around Alamofire with neat input Endpoint and generic Codable Result. Version for iOS/TVOS.
                    DESC
 
   s.homepage     = "https://github.com/FinchMoscow/FNetworkService"
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://github.com/FinchMoscow/FNetworkService.git", :tag => "#{s.version}" }
 
-  s.source_files = "FNetworkService/*.{swift}"
+  s.source_files = "FNetworkService/**/*.{swift}"
 
   s.dependency 'Alamofire'
 
