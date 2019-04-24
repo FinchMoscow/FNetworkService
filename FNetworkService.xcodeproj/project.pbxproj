@@ -21,6 +21,7 @@
 		5CDF4E1022709982006C1764 /* EndpointProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0522709982006C1764 /* EndpointProtocol.swift */; };
 		5CDF4E1122709982006C1764 /* PresentableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0622709982006C1764 /* PresentableError.swift */; };
 		5CDF4E1222709982006C1764 /* LoggerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0722709982006C1764 /* LoggerProtocols.swift */; };
+		5CDF4E142270AF27006C1764 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E132270AF26006C1764 /* NetworkService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		5CDF4E0522709982006C1764 /* EndpointProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointProtocol.swift; sourceTree = "<group>"; };
 		5CDF4E0622709982006C1764 /* PresentableError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentableError.swift; sourceTree = "<group>"; };
 		5CDF4E0722709982006C1764 /* LoggerProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerProtocols.swift; sourceTree = "<group>"; };
+		5CDF4E132270AF26006C1764 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		D4386EB8E85EFFF3F3E764E5 /* libPods-FNetworkService.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FNetworkService.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -85,6 +87,7 @@
 		5CDF4DEF2270954A006C1764 /* FNetworkService */ = {
 			isa = PBXGroup;
 			children = (
+				5CDF4E132270AF26006C1764 /* NetworkService.swift */,
 				5CDF4E0422709982006C1764 /* Protocols */,
 				5CDF4DFB22709982006C1764 /* Supporting */,
 				5CDF4DF822709979006C1764 /* Caching */,
@@ -251,6 +254,7 @@
 				5CDF4E0E22709982006C1764 /* AdditionalSettings.swift in Sources */,
 				5CDF4E0D22709982006C1764 /* HTTPHeader.swift in Sources */,
 				5CDF4E0C22709982006C1764 /* NetworkSettings.swift in Sources */,
+				5CDF4E142270AF27006C1764 /* NetworkService.swift in Sources */,
 				5CDF4E0F22709982006C1764 /* LoggerWriteOptions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
