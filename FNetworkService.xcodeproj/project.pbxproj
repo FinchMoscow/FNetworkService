@@ -87,7 +87,7 @@
 		5CDF4DEF2270954A006C1764 /* FNetworkService */ = {
 			isa = PBXGroup;
 			children = (
-				5CDF4E132270AF26006C1764 /* NetworkService.swift */,
+				5CDF4E152270B19C006C1764 /* NetworkService */,
 				5CDF4E0422709982006C1764 /* Protocols */,
 				5CDF4DFB22709982006C1764 /* Supporting */,
 				5CDF4DF822709979006C1764 /* Caching */,
@@ -128,6 +128,14 @@
 				5CDF4E0722709982006C1764 /* LoggerProtocols.swift */,
 			);
 			path = Protocols;
+			sourceTree = "<group>";
+		};
+		5CDF4E152270B19C006C1764 /* NetworkService */ = {
+			isa = PBXGroup;
+			children = (
+				5CDF4E132270AF26006C1764 /* NetworkService.swift */,
+			);
+			path = NetworkService;
 			sourceTree = "<group>";
 		};
 		75C9215F3D3945930CC7E7D5 /* Pods */ = {
