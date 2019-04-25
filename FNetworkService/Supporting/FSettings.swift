@@ -1,5 +1,5 @@
 //
-//  AdditionalSettings.swift
+//  FSettings.swift
 //  NetworkService
 //
 //  Created by Eugene on 22/04/2019.

@@ -43,7 +43,7 @@ public class NetworkService {
     
     // MARK: - Simple request without cache
     
-    public func requestWithoutCache<Response>(
+    public func request<Response>(
         endpoint: EndpointProtocol,
         completion: @escaping (Result<Response>) -> Void) where Response: Decodable {
         

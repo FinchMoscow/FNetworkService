@@ -7,19 +7,25 @@ Is a wrapper around Alamofire
 
 pod 'FNetworkService'
 
+Network Service supports HTTP request, HTTP request with caching and upload requests.
+
 ```
 import FNetworkService
 
-NetworkService().request(endpoint: EndpointProtocol, completion: (Result<Decodable & Encodable>) -> Void)
-NetworkService().request(endpoint: EndpointProtocol, cachingEnabled: Bool, completion: (Result<Decodable & Encodable>) -> Void)
+let ns = NetworkService()
+
+struct AnyData: Decodable/Codable { /*...*/ }
+
+ns.request(:EndpointProtocol) { [weak self] (result: Result<AnyData>) in
+    /*...*/ 
+})
 
 ```
 
 ### Settings
 
 ```
-AdditionalSettings.isResponsePrintEnabled
-AdditionalSettings.isStatusCodePrintEnabled
+FSettings.isDebugPrintEnabled
 
 ```
 
