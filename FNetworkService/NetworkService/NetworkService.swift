@@ -105,7 +105,7 @@ public class NetworkService {
     
     // MARK: - Request with result caching
     
-    private func requestWithCache<Response>(
+    public func requestWithCache<Response>(
         endpoint: EndpointProtocol,
         completion: @escaping (Result<Response>) -> Void) where Response: Codable {
         
