@@ -41,7 +41,7 @@ NetworkService(settings: reqSettings)
 ### Logs saving
 
 ```
-class MyLogsSaver: NetworkLoggerWriter { /*...*/ } 
+class MyLogsSaver: NetworkLogsWriter { /*...*/ } 
 
 NetworkService(logger: NetworkLoggerWriter)
 
