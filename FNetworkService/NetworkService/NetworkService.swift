@@ -9,7 +9,7 @@ import Foundation
 import Alamofire
 
 // MARK: - Network Service Implementation
-public final class NetworkService {
+public class NetworkService {
     
     // MARK: - Init
     
@@ -39,27 +39,11 @@ public final class NetworkService {
     private let cacheStorage: Storage
     
     
-    // MARK: - Public Methods
-    
-    public func request<Response>(endpoint: EndpointProtocol, completion: @escaping (Result<Response>) -> Void) where Response: Codable {
-        request(endpoint: endpoint, cachingEnabled: false, completion: completion)
-    }
-    
-    public func request<Response>(endpoint: EndpointProtocol, cachingEnabled: Bool = false, completion: @escaping (Result<Response>) -> Void) where Response: Codable {
-        
-        switch cachingEnabled {
-            
-        case true:
-            requestWithCache(endpoint: endpoint, completion: completion)
-        case false:
-            requestWithoutCache(endpoint: endpoint, completion: completion)
-        }
-    }
-    
+    // MARK: - Public methods
     
     // MARK: - Simple request without cache
     
-    private func requestWithoutCache<Response>(
+    public func requestWithoutCache<Response>(
         endpoint: EndpointProtocol,
         completion: @escaping (Result<Response>) -> Void) where Response: Decodable {
         
@@ -218,7 +202,7 @@ public final class NetworkService {
     
     // MARK: - Upload request
     
-    func uploadRequest<Response>(
+    public func uploadRequest<Response>(
         endpoint: EndpointProtocol, data: Data,
         progressHandler: ((Double) -> Void)? = nil,
         completion: @escaping (Result<Response>) -> Void) where Response: Decodable {
@@ -329,7 +313,7 @@ public final class NetworkService {
     
     private func printResponseIfEnabled(_ data: Data) {
         
-        guard AdditionalSettings.isResponsePrintEnabled else { return }
+        guard FSettings.isDebugPrintEnabled else { return }
         
         let text = String(data: data, encoding: .utf8) ?? "Error occured while to converting Data to String!"
         print("JSON DATA = \(text)")
@@ -337,7 +321,7 @@ public final class NetworkService {
     
     private func printStatusCodeIfEnabled(_ statusCode: Int) {
         
-        guard AdditionalSettings.isStatusCodePrintEnabled else { return }
+        guard FSettings.isDebugPrintEnabled else { return }
         print("status code = \(statusCode)")
     }
     

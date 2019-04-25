@@ -18,7 +18,7 @@ public enum APIError: Error, LocalizedError {
     
     // MARK: - LocalizedError
     
-    var localizedDescription: String {
+    public var localizedDescription: String {
         
         switch self {
             
@@ -48,7 +48,6 @@ public enum APIError: Error, LocalizedError {
 
 
 // MARK: - PresentableError
-
 extension APIError: PresentableError {
     
     public var userMessage: String {

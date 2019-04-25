@@ -6,8 +6,8 @@
 //  Copyright © 2019 Finch. All rights reserved.
 //
 
-public struct AdditionalSettings {
+public struct FSettings {
     
-    public static var isResponsePrintEnabled: Bool = true
-    public static var isStatusCodePrintEnabled: Bool = true
+    public static var isDebugPrintEnabled: Bool = true
+    
 }
