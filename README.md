@@ -55,7 +55,6 @@ NetworkService(logger: NetworkLoggerWriter)
 ### Authors
 
 * [Alexandr Antonov](https://github.com/nitrey)
-* [Eugene Orekhin](https://github.com/ffs14k)
 
 
 ## License
