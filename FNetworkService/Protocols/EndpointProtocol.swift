@@ -14,7 +14,7 @@ public typealias HTTPHeaders = [String: String] // A dictionary of headers to ap
 public typealias HTTPMethod = Alamofire.HTTPMethod
 public typealias Headers = HTTPHeaders
 
-public protocol FEndpointProtocol {
+public protocol EndpointProtocol {
     
     var baseUrl: URL? { get }
     var path: String { get }
@@ -25,7 +25,7 @@ public protocol FEndpointProtocol {
     var cacheKey: String? { get }
 }
 
-public extension FEndpointProtocol {
+public extension EndpointProtocol {
     
     var encoding: ParameterEncoding {
         switch method {

@@ -48,7 +48,7 @@ public class NetworkService {
     
     
     public func request<Response>(
-        endpoint: FEndpointProtocol,
+        endpoint: EndpointProtocol,
         isCahingEnabled: Bool,
         completion: @escaping (FResult<Response>) -> Void) where Response: Codable {
         
@@ -66,7 +66,7 @@ public class NetworkService {
     // MARK: - Simple request without cache
     
     public func request<Response>(
-        endpoint: FEndpointProtocol,
+        endpoint: EndpointProtocol,
         completion: @escaping (FResult<Response>) -> Void) where Response: Decodable {
         
         guard let baseUrl = endpoint.baseUrl else {
@@ -128,7 +128,7 @@ public class NetworkService {
     // MARK: - Request with result caching
     
     public func requestWithCache<Response>(
-        endpoint: FEndpointProtocol,
+        endpoint: EndpointProtocol,
         completion: @escaping (FResult<Response>) -> Void) where Response: Codable {
         
         guard let baseUrl = endpoint.baseUrl else {
@@ -225,7 +225,7 @@ public class NetworkService {
     // MARK: - Upload request
     
     public func uploadRequest<Response>(
-        endpoint: FEndpointProtocol, data: Data,
+        endpoint: EndpointProtocol, data: Data,
         progressHandler: ((Double) -> Void)? = nil,
         completion: @escaping (FResult<Response>) -> Void) where Response: Decodable {
         
@@ -294,13 +294,13 @@ public class NetworkService {
     
     // MARK: - Cache helpers
     
-    private func retrieveCachedResponseIfExists<Response: Codable>(for endpoint: FEndpointProtocol) -> Response? {
+    private func retrieveCachedResponseIfExists<Response: Codable>(for endpoint: EndpointProtocol) -> Response? {
         
         guard let cacheKey = endpoint.cacheKey else { return nil }
         return cacheStorage.retrieveValue(for: cacheKey)
     }
     
-    private func cacheResponseIfNeeded<Response: Codable>(_ response: Response, for endpoint: FEndpointProtocol) {
+    private func cacheResponseIfNeeded<Response: Codable>(_ response: Response, for endpoint: EndpointProtocol) {
         
         guard let cacheKey = endpoint.cacheKey else { return }
         cacheStorage.save(response, for: cacheKey)
@@ -313,7 +313,7 @@ public class NetworkService {
         return ApiError.serverError(error: response.error, response: response.response, data: response.data)
     }
     
-    private func writeLogsIfNeeded<T>(with endPoint: FEndpointProtocol, and result: FResult<T>) {
+    private func writeLogsIfNeeded<T>(with endPoint: EndpointProtocol, and result: FResult<T>) {
         
         guard let logger = logger else { return }
         
