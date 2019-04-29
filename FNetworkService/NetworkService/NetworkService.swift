@@ -47,6 +47,22 @@ public class NetworkService {
     }
     
     
+    public func request<Response>(
+        endpoint: EndpointProtocol,
+        isCahingEnabled: Bool,
+        completion: @escaping (FResult<Response>) -> Void) where Response: Codable {
+        
+        switch isCahingEnabled {
+        case false:
+            request(endpoint: endpoint, completion: completion)
+            
+        case true:
+            requestWithCache(endpoint: endpoint, completion: completion)
+        }
+        
+    }
+    
+    
     // MARK: - Simple request without cache
     
     public func request<Response>(
