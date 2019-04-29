@@ -32,7 +32,7 @@ public class NetworkService {
     
     // MARK: - Properties
     
-    private var logger: NetworkLogsWriter?
+    private weak var logger: NetworkLogsWriter?
     private let settings: NetworkSettings
     private let decoder: JSONDecoder
     private let alamofireManager: SessionManager
