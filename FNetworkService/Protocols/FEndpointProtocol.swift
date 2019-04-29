@@ -1,5 +1,5 @@
 //
-//  Route.swift
+//  FEndpointProtocol.swift
 //  Stewards
 //
 //  Created by Alexander Antonov on 06/09/2018.
@@ -14,7 +14,7 @@ public typealias HTTPHeaders = [String: String] // A dictionary of headers to ap
 public typealias HTTPMethod = Alamofire.HTTPMethod
 public typealias Headers = HTTPHeaders
 
-public protocol EndpointProtocol {
+public protocol FEndpointProtocol {
     
     var baseUrl: URL? { get }
     var path: String { get }
@@ -25,7 +25,7 @@ public protocol EndpointProtocol {
     var cacheKey: String? { get }
 }
 
-public extension EndpointProtocol {
+public extension FEndpointProtocol {
     
     var encoding: ParameterEncoding {
         switch method {
