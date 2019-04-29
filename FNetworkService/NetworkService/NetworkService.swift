@@ -32,7 +32,7 @@ public class NetworkService {
     
     // MARK: - Properties
     
-    private let logger: NetworkLogsWriter?
+    private var logger: NetworkLogsWriter?
     private let settings: NetworkSettings
     private let decoder: JSONDecoder
     private let alamofireManager: SessionManager
@@ -40,6 +40,12 @@ public class NetworkService {
     
     
     // MARK: - Public methods
+    
+    
+    public func inject(logger: NetworkLogsWriter?) {
+        self.logger = logger
+    }
+    
     
     // MARK: - Simple request without cache
     
