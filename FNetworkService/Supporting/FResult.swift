@@ -1,5 +1,5 @@
 //
-//  Result.swift
+//  FResult.swift
 //  Stewards
 //
 //  Created by Alexander Antonov on 06/09/2018.
@@ -8,10 +8,10 @@
 
 import Foundation
 
-public enum Result<Model> {
+public enum FResult<Model> {
     
     case success(Model)
-    case failure(APIError)
+    case failure(ApiError)
     
     
     // Returns `true` if the result is a success, `false` otherwise.
@@ -57,9 +57,9 @@ public enum Result<Model> {
 
 
 // MARK: - Equatable
-extension Result: Equatable where Model: Equatable {
+extension FResult: Equatable where Model: Equatable {
     
-    public static func == (lhs: Result, rhs: Result) -> Bool {
+    public static func == (lhs: FResult, rhs: FResult) -> Bool {
         
         switch (lhs, rhs) {
         case (.success(let lhs), .success(let rhs)):

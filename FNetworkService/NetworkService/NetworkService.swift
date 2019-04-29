@@ -45,10 +45,10 @@ public class NetworkService {
     
     public func request<Response>(
         endpoint: EndpointProtocol,
-        completion: @escaping (Result<Response>) -> Void) where Response: Decodable {
+        completion: @escaping (FResult<Response>) -> Void) where Response: Decodable {
         
         guard let baseUrl = endpoint.baseUrl else {
-            completion(Result.failure(.noBaseUrl))
+            completion(FResult.failure(.noBaseUrl))
             return
         }
         
@@ -61,7 +61,7 @@ public class NetworkService {
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: Result<Response>
+                                    let result: FResult<Response>
                                     
                                     defer {
                                         DispatchQueue.main.async {
@@ -71,13 +71,13 @@ public class NetworkService {
                                     }
                                     
                                     guard let httpResponse = response.response else {
-                                        result = Result.failure(APIError.noNetwork)
+                                        result = FResult.failure(ApiError.noNetwork)
                                         return
                                     }
                                     
                                     guard (self.settings.validCodes ~= httpResponse.statusCode) else {
                                         let serverError = self.createServerError(from: response)
-                                        result = Result.failure(serverError)
+                                        result = FResult.failure(serverError)
                                         return
                                     }
                                     
@@ -85,7 +85,7 @@ public class NetworkService {
                                     
                                     guard let data = response.data else {
                                         let serverError = self.createServerError(from: response)
-                                        result = Result.failure(serverError)
+                                        result = FResult.failure(serverError)
                                         return
                                     }
                                     
@@ -93,9 +93,9 @@ public class NetworkService {
                                     
                                     do {
                                         let object = try self.decoder.decode(Response.self, from: data)
-                                        result = Result.success(object)
+                                        result = FResult.success(object)
                                     } catch {
-                                        result = Result.failure(.decodingError)
+                                        result = FResult.failure(.decodingError)
                                     }
                                     
         }
@@ -107,10 +107,10 @@ public class NetworkService {
     
     public func requestWithCache<Response>(
         endpoint: EndpointProtocol,
-        completion: @escaping (Result<Response>) -> Void) where Response: Codable {
+        completion: @escaping (FResult<Response>) -> Void) where Response: Codable {
         
         guard let baseUrl = endpoint.baseUrl else {
-            completion(Result.failure(.noBaseUrl))
+            completion(FResult.failure(.noBaseUrl))
             return
         }
         
@@ -128,7 +128,7 @@ public class NetworkService {
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: Result<Response>
+                                    let result: FResult<Response>
                                     
                                     defer {
                                         
@@ -160,13 +160,13 @@ public class NetworkService {
                                     }
                                     
                                     guard let httpResponse = response.response else {
-                                        result = Result.failure(APIError.noNetwork)
+                                        result = FResult.failure(ApiError.noNetwork)
                                         return
                                     }
                                     
                                     guard (self.settings.validCodes ~= httpResponse.statusCode) else {
                                         let serverError = self.createServerError(from: response)
-                                        result = Result.failure(serverError)
+                                        result = FResult.failure(serverError)
                                         return
                                     }
                                     
@@ -174,7 +174,7 @@ public class NetworkService {
                                     
                                     guard let data = response.data else {
                                         let serverError = self.createServerError(from: response)
-                                        result = Result.failure(serverError)
+                                        result = FResult.failure(serverError)
                                         return
                                     }
                                     
@@ -182,9 +182,9 @@ public class NetworkService {
                                     
                                     do {
                                         let object = try self.decoder.decode(Response.self, from: data)
-                                        result = Result.success(object)
+                                        result = FResult.success(object)
                                     } catch {
-                                        result = Result.failure(.decodingError)
+                                        result = FResult.failure(.decodingError)
                                     }
                                     
         }
@@ -205,10 +205,10 @@ public class NetworkService {
     public func uploadRequest<Response>(
         endpoint: EndpointProtocol, data: Data,
         progressHandler: ((Double) -> Void)? = nil,
-        completion: @escaping (Result<Response>) -> Void) where Response: Decodable {
+        completion: @escaping (FResult<Response>) -> Void) where Response: Decodable {
         
         guard let baseUrl = endpoint.baseUrl else {
-            completion(Result.failure(.noBaseUrl))
+            completion(FResult.failure(.noBaseUrl))
             return
         }
         
@@ -222,7 +222,7 @@ public class NetworkService {
             
             guard let self = self else { return }
             
-            let result: Result<Response>
+            let result: FResult<Response>
             
             defer {
                 DispatchQueue.main.async {
@@ -232,13 +232,13 @@ public class NetworkService {
             }
             
             guard let httpResponse = response.response else {
-                result = Result.failure(APIError.noNetwork)
+                result = FResult.failure(ApiError.noNetwork)
                 return
             }
             
             guard (self.settings.validCodes ~= httpResponse.statusCode) else {
                 let serverError = self.createServerError(from: response)
-                result = Result.failure(serverError)
+                result = FResult.failure(serverError)
                 return
             }
             
@@ -246,7 +246,7 @@ public class NetworkService {
             
             guard let data = response.data else {
                 let serverError = self.createServerError(from: response)
-                result = Result.failure(serverError)
+                result = FResult.failure(serverError)
                 return
             }
             
@@ -254,9 +254,9 @@ public class NetworkService {
             
             do {
                 let object = try self.decoder.decode(Response.self, from: data)
-                result = Result.success(object)
+                result = FResult.success(object)
             } catch {
-                result = Result.failure(.decodingError)
+                result = FResult.failure(.decodingError)
             }
             
         }
@@ -287,11 +287,11 @@ public class NetworkService {
     
     // MARK: - Helper methods
     
-    private func createServerError(from response: DefaultDataResponse) -> APIError {
-        return APIError.serverError(error: response.error, response: response.response, data: response.data)
+    private func createServerError(from response: DefaultDataResponse) -> ApiError {
+        return ApiError.serverError(error: response.error, response: response.response, data: response.data)
     }
     
-    private func writeLogsIfNeeded<T>(with endPoint: EndpointProtocol, and result: Result<T>) {
+    private func writeLogsIfNeeded<T>(with endPoint: EndpointProtocol, and result: FResult<T>) {
         
         guard let logger = logger else { return }
         

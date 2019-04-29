@@ -1,5 +1,5 @@
 //
-//  APIError.swift
+//  ApiError.swift
 //  Stewards
 //
 //  Created by Alexander Antonov on 06/09/2018.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum APIError: Error, LocalizedError {
+public enum ApiError: Error, LocalizedError {
     
     case noBaseUrl
     case noNetwork
@@ -19,6 +19,22 @@ public enum APIError: Error, LocalizedError {
     // MARK: - LocalizedError
     
     public var localizedDescription: String {
+        
+        switch self {
+            
+        case .noBaseUrl:
+            return "Ошибка запроса"
+            
+        case .noNetwork:
+            return "Отсутствует интернет соединение"
+            
+        case .serverError, .decodingError:
+            return "Не удалось получить данные"
+        }
+        
+    }
+    
+    public var failureReason: String? {
         
         switch self {
             
@@ -40,40 +56,18 @@ public enum APIError: Error, LocalizedError {
             
         case .decodingError:
             return "Error decoding object."
-        
-        }
-    }
-    
-}
-
-
-// MARK: - PresentableError
-extension APIError: PresentableError {
-    
-    public var userMessage: String {
-        
-        switch self {
             
-        case .noBaseUrl:
-            return "Ошибка запроса"
-            
-        case .noNetwork:
-            return "Отсутствует интернет соединение"
-            
-        case .serverError, .decodingError:
-            return "Не удалось получить данные"
         }
         
     }
     
 }
-
 
 
 // MARK: - Equatable
-extension APIError: Equatable {
+extension ApiError: Equatable {
     
-    public static func == (lhs: APIError, rhs: APIError) -> Bool {
+    public static func == (lhs: ApiError, rhs: ApiError) -> Bool {
         
         switch (lhs, rhs) {
         case (.noBaseUrl, .noBaseUrl):
@@ -93,7 +87,7 @@ extension APIError: Equatable {
 
 
 // MARK: - IsNetworkError
-extension APIError {
+extension ApiError {
     
     public var isNetworkError: Bool {
         switch self {
@@ -106,7 +100,7 @@ extension APIError {
 
 
 // TODO: To think about
-//extension APIError: PresentableError {
+//extension ApiError: PresentableError {
 //
 //    var userMessage: String {
 //

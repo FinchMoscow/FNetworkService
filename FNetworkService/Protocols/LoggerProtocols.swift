@@ -8,19 +8,19 @@
 
 private let endLine = "\n"
 
-public protocol NetworkLogsWriter {
+public protocol NetworkLogsWriter: AnyObject {
     
     var writeOptions: LoggerWriteOptions { get }
     var dateLocale: Locale { get }
     
     func write(log: String)
-    func write<T>(endpoint: EndpointProtocol, result: Result<T>)
+    func write<T>(endpoint: EndpointProtocol, result: FResult<T>)
 }
 
 // MARK: - NetworkLogsWriter default implementation
 public extension NetworkLogsWriter {
     
-    func write<T>(endpoint: EndpointProtocol, result: Result<T>) {
+    func write<T>(endpoint: EndpointProtocol, result: FResult<T>) {
         
         let method = endpoint.method
         let domain = endpoint.baseUrl?.absoluteString ?? "Domain missed!"
