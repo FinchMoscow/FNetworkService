@@ -14,6 +14,7 @@ public enum ApiError: Error, LocalizedError {
     case noNetwork
     case serverError(error: Error?, response: HTTPURLResponse?, data: Data?)
     case decodingError
+    case custom(String?)
 
     
     // MARK: - LocalizedError
@@ -30,6 +31,8 @@ public enum ApiError: Error, LocalizedError {
             
         case .serverError, .decodingError:
             return "Не удалось получить данные"
+        case .custom(let errorText):
+            return errorText ?? "Непредвиденная ошибка!"
         }
         
     }
@@ -57,6 +60,8 @@ public enum ApiError: Error, LocalizedError {
         case .decodingError:
             return "Error decoding object."
             
+        case .custom(let errorText):
+            return "Custom error: \(errorText ?? "No info provided")"
         }
         
     }
@@ -78,6 +83,8 @@ extension ApiError: Equatable {
             return true
         case (.serverError(_, let lhsResp, let lhsData), .serverError(_, let rhsResp, let rhsData)):
             return lhsResp?.statusCode == rhsResp?.statusCode && lhsData == rhsData
+        case (.custom(let leftErrText), .custom(let rightErrText)):
+            return leftErrText == rightErrText
         default:
             return false
         }
@@ -97,40 +104,3 @@ extension ApiError {
     }
     
 }
-
-
-// TODO: To think about
-//extension ApiError: PresentableError {
-//
-//    var userMessage: String {
-//
-//        let errorStrings = Config.main.apiErrorStrings
-//
-//        switch self {
-//
-//        case .noBaseUrl:
-//            return errorStrings?.noBaseUrl ?? "Ошибка запроса"
-//        case .noNetwork:
-//            return errorStrings?.noNetwork ?? "Отсутствует интернет соединение"
-//        case .serverError, .decodingError:
-//            return errorStrings?.serverError ?? "Не удалось получить данные"
-//        case .notAuthorized:
-//            return errorStrings?.notAuthorized ?? "Для корректной работы раздела необходима авторизация"
-//
-//        case .wrongPayment(let system):
-//            return "Ранее подписка была оформлена через \(system)"
-//
-//        case .expiresDate:
-//            return errorStrings?.expiresDate ?? " Дата подписки истекла"
-//
-//        case .storeKit(let error):
-//            return error.localizedDescription
-//
-//        case .custom(let message):
-//            return message ?? "Непредвиденная ошибка!"
-//
-//        }
-//
-//    }
-//
-//}
