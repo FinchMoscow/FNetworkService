@@ -6,7 +6,17 @@
 
 **Table of Contents**
 
-[TOC]
+1. [Usage](#Usage)
+2. [Settings](#Settings)
+3. [Logs Writer](#Logs-Writer)
+4. [Constructing Endpoints](#Constructing-Endpoints)
+5. [Built With](#Built-With)
+6. [Built With](#Built-With)
+7. [Authors](#Authors)
+8. [License](#License)
+
+
+
 
 ### Usage
 
