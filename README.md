@@ -6,10 +6,7 @@
 
 **Table of Contents**
 
-[TOC]
-
-
-###Usage
+### Usage
 
 ```
 struct AnyResponse: Decodable/Codable { /*...*/ }
@@ -28,7 +25,7 @@ networkService.request(endpoint: EndpointProtocol) { [weak self] (result: AnyRes
 ```
 
 
-###Settings
+### Settings
 
 Set up project settings which will be used by every NetworkService instance
 ```
@@ -50,7 +47,7 @@ let configuratedNetworkService = NetworkService(settings: settings)
 ```
 
 
-###Logs Writer
+### Logs Writer
 
 Implement logs writer for your purposes.
 
@@ -66,7 +63,7 @@ class MyLogsWriter: NetworkLogsWriter {
 ```
 
 
-###Constructing Endpoints
+### Constructing Endpoints
 
 `struct example`
 
