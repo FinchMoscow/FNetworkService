@@ -6,6 +6,8 @@
 
 **Table of Contents**
 
+[TOC]
+
 ### Usage
 
 ```
