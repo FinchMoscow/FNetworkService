@@ -1,6 +1,6 @@
 //
 //  FEndpointProtocol.swift
-//  Stewards
+//  FNetworkService
 //
 //  Created by Alexander Antonov on 06/09/2018.
 //  Copyright © 2018 Finch. All rights reserved.
@@ -29,10 +29,8 @@ public extension EndpointProtocol {
     
     var encoding: ParameterEncoding {
         switch method {
-        case .get:
-            return URLEncoding()
-        default:
-            return JSONEncoding()
+        case .get:      return URLEncoding()
+        default:        return JSONEncoding()
         }
     }
     

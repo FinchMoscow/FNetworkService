@@ -1,6 +1,6 @@
 //
-//  ApiError.swift
-//  Stewards
+//  APIError.swift
+//  FNetworkService
 //
 //  Created by Alexander Antonov on 06/09/2018.
 //  Copyright © 2018 Finch. All rights reserved.
@@ -8,36 +8,17 @@
 
 import Foundation
 
-public enum ApiError: Error, LocalizedError {
+public enum APIError: Error {
     
     case noBaseUrl
     case noNetwork
     case serverError(error: Error?, response: HTTPURLResponse?, data: Data?)
     case decodingError
-    case custom(String?)
-
+    
     
     // MARK: - LocalizedError
     
     public var localizedDescription: String {
-        
-        switch self {
-            
-        case .noBaseUrl:
-            return "Ошибка запроса"
-            
-        case .noNetwork:
-            return "Отсутствует интернет соединение"
-            
-        case .serverError, .decodingError:
-            return "Не удалось получить данные"
-        case .custom(let errorText):
-            return errorText ?? "Непредвиденная ошибка!"
-        }
-        
-    }
-    
-    public var failureReason: String? {
         
         switch self {
             
@@ -58,10 +39,8 @@ public enum ApiError: Error, LocalizedError {
             return resultString
             
         case .decodingError:
-            return "Error decoding object."
+            return "Error occured while decoding object."
             
-        case .custom(let errorText):
-            return "Custom error: \(errorText ?? "No info provided")"
         }
         
     }
@@ -70,9 +49,9 @@ public enum ApiError: Error, LocalizedError {
 
 
 // MARK: - Equatable
-extension ApiError: Equatable {
+extension APIError: Equatable {
     
-    public static func == (lhs: ApiError, rhs: ApiError) -> Bool {
+    public static func == (lhs: APIError, rhs: APIError) -> Bool {
         
         switch (lhs, rhs) {
         case (.noBaseUrl, .noBaseUrl):
@@ -83,8 +62,6 @@ extension ApiError: Equatable {
             return true
         case (.serverError(_, let lhsResp, let lhsData), .serverError(_, let rhsResp, let rhsData)):
             return lhsResp?.statusCode == rhsResp?.statusCode && lhsData == rhsData
-        case (.custom(let leftErrText), .custom(let rightErrText)):
-            return leftErrText == rightErrText
         default:
             return false
         }
@@ -94,7 +71,7 @@ extension ApiError: Equatable {
 
 
 // MARK: - IsNetworkError
-extension ApiError {
+extension APIError {
     
     public var isNetworkError: Bool {
         switch self {

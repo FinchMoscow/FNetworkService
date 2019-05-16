@@ -1,6 +1,6 @@
 //
-//  LoggerProtocols.swift
-//  THT-Premier
+//  LoggerProtocol.swift
+//  FNetworkService
 //
 //  Created by Eugene on 25/03/2019.
 //  Copyright © 2019 Finch. All rights reserved.
@@ -8,19 +8,19 @@
 
 private let endLine = "\n"
 
-public protocol NetworkLogsWriter: AnyObject {
+public protocol NetworkLogWriter: AnyObject {
     
     var writeOptions: LoggerWriteOptions { get }
     var dateLocale: Locale { get }
     
     func write(log: String)
-    func write<T>(endpoint: EndpointProtocol, result: FResult<T>)
+    func write<T>(endpoint: EndpointProtocol, result: APIResult<T>)
 }
 
 // MARK: - NetworkLogsWriter default implementation
-public extension NetworkLogsWriter {
+public extension NetworkLogWriter {
     
-    func write<T>(endpoint: EndpointProtocol, result: FResult<T>) {
+    func write<T>(endpoint: EndpointProtocol, result: APIResult<T>) {
         
         let method = endpoint.method
         let domain = endpoint.baseUrl?.absoluteString ?? "Domain missed!"
@@ -29,10 +29,10 @@ public extension NetworkLogsWriter {
         let parameters = endpoint.parameters.stringValue
         let headers = endpoint.headers.stringValue
         
-        var networkLog = endLine + currentDate + endLine
-        networkLog += method.rawValue + " Request: " + domain + path + endLine
-        networkLog += "with parameters: " + parameters + endLine
-        networkLog += "headers: " + headers + endLine
+        var endpointLog = "\(currentDate)\(endLine)"
+        endpointLog += "\(method.rawValue) Request: \(domain)\(path)\(endLine)"
+        endpointLog += "with parameters: \(parameters)\(endLine)"
+        endpointLog += "headers: \(headers)\(endLine)"
         
         let resultText: String
         
@@ -43,7 +43,7 @@ public extension NetworkLogsWriter {
             resultText = "SUCCESS"
         }
         
-        networkLog += resultText
+        let networkLog = endpointLog + resultText
         
         write(log: networkLog)
     }

@@ -13,17 +13,17 @@ public class NetworkService {
     
     // MARK: - Init
     
-    public init(logger: NetworkLogsWriter? = nil, settings: NetworkSettings = NetworkSettings.default) {
+    public init(settings: Settings = Settings.default) {
         
         self.settings = settings
-        self.logger = logger
+        self.networkLogger = settings.networkLogger
+        self.debugLogger = settings.debugLogger
         
         self.decoder = JSONDecoder()
         self.decoder.dateDecodingStrategy = settings.dateDecodingStrategy
         
         let sessionConfiguration = URLSessionConfiguration.default
         sessionConfiguration.timeoutIntervalForRequest = settings.requestTimeout
-        sessionConfiguration.timeoutIntervalForResource = settings.resourceTimeout
         self.alamofireManager = Alamofire.SessionManager(configuration: sessionConfiguration)
         
         self.cacheStorage = GenericStorage()
@@ -32,8 +32,9 @@ public class NetworkService {
     
     // MARK: - Properties
     
-    private weak var logger: NetworkLogsWriter?
-    private let settings: NetworkSettings
+    private let debugLogger: NetworkLogWriter?
+    private let networkLogger: NetworkLogWriter?
+    private let settings: Settings
     private let decoder: JSONDecoder
     private let alamofireManager: SessionManager
     private let cacheStorage: Storage
@@ -41,23 +42,14 @@ public class NetworkService {
     
     // MARK: - Public methods
     
-    
-    public func inject(logger: NetworkLogsWriter?) {
-        self.logger = logger
-    }
-    
-    
-    public func request<Response>(
-        endpoint: EndpointProtocol,
-        isCahingEnabled: Bool,
-        completion: @escaping (FResult<Response>) -> Void) where Response: Codable {
+    public func request<Response>( endpoint: EndpointProtocol,
+                                   isCahingEnabled: Bool,
+                                   completion: @escaping (APIResult<Response>) -> Void) where Response: Codable
+    {
         
         switch isCahingEnabled {
-        case false:
-            request(endpoint: endpoint, completion: completion)
-            
-        case true:
-            requestWithCache(endpoint: endpoint, completion: completion)
+        case false: request(endpoint: endpoint, completion: completion)
+        case true: requestWithCache(endpoint: endpoint, completion: completion)
         }
         
     }
@@ -67,57 +59,55 @@ public class NetworkService {
     
     public func request<Response>(
         endpoint: EndpointProtocol,
-        completion: @escaping (FResult<Response>) -> Void) where Response: Decodable {
+        completion: @escaping (APIResult<Response>) -> Void) where Response: Decodable
+    {
         
         guard let baseUrl = endpoint.baseUrl else {
-            completion(FResult.failure(.noBaseUrl))
+            completion(APIResult.failure(.noBaseUrl))
             return
         }
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
         
-        alamofireManager.request(url, method: endpoint.method,
+        alamofireManager.request(url,
+                                 method: endpoint.method,
                                  parameters: endpoint.parameters,
                                  encoding: endpoint.encoding,
                                  headers: endpoint.headers).response { [weak self] response in
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: FResult<Response>
+                                    let result: APIResult<Response>
                                     
                                     defer {
                                         DispatchQueue.main.async {
                                             completion(result)
-                                            self.writeLogsIfNeeded(with: endpoint, and: result)
                                         }
+                                        self.perfomLogWriting(endpoint: endpoint, result: result)
                                     }
                                     
                                     guard let httpResponse = response.response else {
-                                        result = FResult.failure(ApiError.noNetwork)
+                                        result = APIResult.failure(APIError.noNetwork)
                                         return
                                     }
                                     
                                     guard (self.settings.validCodes ~= httpResponse.statusCode) else {
                                         let serverError = self.createServerError(from: response)
-                                        result = FResult.failure(serverError)
+                                        result = APIResult.failure(serverError)
                                         return
                                     }
-                                    
-                                    self.printStatusCodeIfEnabled(httpResponse.statusCode)
                                     
                                     guard let data = response.data else {
                                         let serverError = self.createServerError(from: response)
-                                        result = FResult.failure(serverError)
+                                        result = APIResult.failure(serverError)
                                         return
                                     }
                                     
-                                    self.printResponseIfEnabled(data)
-                                    
                                     do {
                                         let object = try self.decoder.decode(Response.self, from: data)
-                                        result = FResult.success(object)
+                                        result = APIResult.success(object)
                                     } catch {
-                                        result = FResult.failure(.decodingError)
+                                        result = APIResult.failure(.decodingError)
                                     }
                                     
         }
@@ -129,10 +119,10 @@ public class NetworkService {
     
     public func requestWithCache<Response>(
         endpoint: EndpointProtocol,
-        completion: @escaping (FResult<Response>) -> Void) where Response: Codable {
+        completion: @escaping (APIResult<Response>) -> Void) where Response: Codable {
         
         guard let baseUrl = endpoint.baseUrl else {
-            completion(FResult.failure(.noBaseUrl))
+            completion(APIResult.failure(.noBaseUrl))
             return
         }
         
@@ -143,20 +133,19 @@ public class NetworkService {
         
         var completionCalled = false // To avoid calling completion block twice (with network response and cached response)
         
-        alamofireManager.request(url, method: endpoint.method,
+        alamofireManager.request(url,
+                                 method: endpoint.method,
                                  parameters: endpoint.parameters,
                                  encoding: endpoint.encoding,
                                  headers: endpoint.headers).response { [weak self] response in
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: FResult<Response>
+                                    let result: APIResult<Response>
                                     
                                     defer {
                                         
                                         DispatchQueue.main.async {
-                                            
-                                            self.writeLogsIfNeeded(with: endpoint, and: result)
                                             
                                             switch result {
                                                 
@@ -179,34 +168,31 @@ public class NetworkService {
                                             
                                         }
                                         
+                                        self.perfomLogWriting(endpoint: endpoint, result: result)
                                     }
                                     
                                     guard let httpResponse = response.response else {
-                                        result = FResult.failure(ApiError.noNetwork)
+                                        result = APIResult.failure(APIError.noNetwork)
                                         return
                                     }
                                     
                                     guard (self.settings.validCodes ~= httpResponse.statusCode) else {
                                         let serverError = self.createServerError(from: response)
-                                        result = FResult.failure(serverError)
+                                        result = APIResult.failure(serverError)
                                         return
                                     }
-                                    
-                                    self.printStatusCodeIfEnabled(httpResponse.statusCode)
                                     
                                     guard let data = response.data else {
                                         let serverError = self.createServerError(from: response)
-                                        result = FResult.failure(serverError)
+                                        result = APIResult.failure(serverError)
                                         return
                                     }
                                     
-                                    self.printResponseIfEnabled(data)
-                                    
                                     do {
                                         let object = try self.decoder.decode(Response.self, from: data)
-                                        result = FResult.success(object)
+                                        result = APIResult.success(object)
                                     } catch {
-                                        result = FResult.failure(.decodingError)
+                                        result = APIResult.failure(.decodingError)
                                     }
                                     
         }
@@ -225,12 +211,13 @@ public class NetworkService {
     // MARK: - Upload request
     
     public func uploadRequest<Response>(
-        endpoint: EndpointProtocol, data: Data,
+        endpoint: EndpointProtocol,
+        data: Data,
         progressHandler: ((Double) -> Void)? = nil,
-        completion: @escaping (FResult<Response>) -> Void) where Response: Decodable {
+        completion: @escaping (APIResult<Response>) -> Void) where Response: Decodable {
         
         guard let baseUrl = endpoint.baseUrl else {
-            completion(FResult.failure(.noBaseUrl))
+            completion(APIResult.failure(.noBaseUrl))
             return
         }
         
@@ -244,41 +231,37 @@ public class NetworkService {
             
             guard let self = self else { return }
             
-            let result: FResult<Response>
+            let result: APIResult<Response>
             
             defer {
                 DispatchQueue.main.async {
                     completion(result)
-                    self.writeLogsIfNeeded(with: endpoint, and: result)
                 }
+                self.perfomLogWriting(endpoint: endpoint, result: result)
             }
             
             guard let httpResponse = response.response else {
-                result = FResult.failure(ApiError.noNetwork)
+                result = APIResult.failure(APIError.noNetwork)
                 return
             }
             
             guard (self.settings.validCodes ~= httpResponse.statusCode) else {
                 let serverError = self.createServerError(from: response)
-                result = FResult.failure(serverError)
+                result = APIResult.failure(serverError)
                 return
             }
-            
-            self.printStatusCodeIfEnabled(httpResponse.statusCode)
             
             guard let data = response.data else {
                 let serverError = self.createServerError(from: response)
-                result = FResult.failure(serverError)
+                result = APIResult.failure(serverError)
                 return
             }
             
-            self.printResponseIfEnabled(data)
-            
             do {
                 let object = try self.decoder.decode(Response.self, from: data)
-                result = FResult.success(object)
+                result = APIResult.success(object)
             } catch {
-                result = FResult.failure(.decodingError)
+                result = APIResult.failure(.decodingError)
             }
             
         }
@@ -295,13 +278,11 @@ public class NetworkService {
     // MARK: - Cache helpers
     
     private func retrieveCachedResponseIfExists<Response: Codable>(for endpoint: EndpointProtocol) -> Response? {
-        
         guard let cacheKey = endpoint.cacheKey else { return nil }
         return cacheStorage.retrieveValue(for: cacheKey)
     }
     
     private func cacheResponseIfNeeded<Response: Codable>(_ response: Response, for endpoint: EndpointProtocol) {
-        
         guard let cacheKey = endpoint.cacheKey else { return }
         cacheStorage.save(response, for: cacheKey)
     }
@@ -309,42 +290,44 @@ public class NetworkService {
     
     // MARK: - Helper methods
     
-    private func createServerError(from response: DefaultDataResponse) -> ApiError {
-        return ApiError.serverError(error: response.error, response: response.response, data: response.data)
+    private func createServerError(from response: DefaultDataResponse) -> APIError {
+        return APIError.serverError(error: response.error, response: response.response, data: response.data)
     }
     
-    private func writeLogsIfNeeded<T>(with endPoint: EndpointProtocol, and result: FResult<T>) {
+    private func perfomLogWriting<T>(endpoint: EndpointProtocol, result: APIResult<T>) {
+        
+        DispatchQueue.global(qos: .background).async {
+            self.writeLogsIfNeeded(using: self.networkLogger, with: endpoint, and: result)
+            self.writeLogsIfNeeded(using: self.debugLogger, with: endpoint, and: result)
+        }
+        
+    }
+    
+    private func writeLogsIfNeeded<T>(using logger: NetworkLogWriter?,
+                                      with endpoint: EndpointProtocol,
+                                      and result: APIResult<T>)
+    {
         
         guard let logger = logger else { return }
         
         switch logger.writeOptions {
             
-        case .onError:
-            guard result.isFailure else { return }
-            logger.write(endpoint: endPoint, result: result)
+        case .all:
+            logger.write(endpoint: endpoint, result: result)
             
         case .onSuccess:
             guard result.isSuccess else { return }
-            logger.write(endpoint: endPoint, result: result)
+            logger.write(endpoint: endpoint, result: result)
             
-        case .all:
-            logger.write(endpoint: endPoint, result: result)
+        case .onError:
+            guard result.isFailure else { return }
+            logger.write(endpoint: endpoint, result: result)
+
+        case .none:
+            return
+            
         }
         
-    }
-    
-    private func printResponseIfEnabled(_ data: Data) {
-        
-        guard FSettings.isDebugPrintEnabled else { return }
-        
-        let text = String(data: data, encoding: .utf8) ?? "Error occured while to converting Data to String!"
-        print("JSON DATA = \(text)")
-    }
-    
-    private func printStatusCodeIfEnabled(_ statusCode: Int) {
-        
-        guard FSettings.isDebugPrintEnabled else { return }
-        print("status code = \(statusCode)")
     }
     
 }

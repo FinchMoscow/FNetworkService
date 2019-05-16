@@ -1,6 +1,6 @@
 //
 //  Optional+stringValue.swift
-//  Stewards
+//  FNetworkService
 //
 //  Created by Alexander Antonov on 16/09/2018.
 //  Copyright © 2018 Finch. All rights reserved.
