@@ -8,7 +8,7 @@
 
 1. [Usage](#Usage)
 2. [Settings](#Settings)
-3. [Logs Writer](#Logs-Writer)
+3. [Log Writer](#Log-Writer)
 4. [Constructing Endpoints](#Constructing-Endpoints)
 5. [Built With](#Built-With)
 6. [Built With](#Built-With)
@@ -59,7 +59,7 @@ let configuratedNetworkService = NetworkService(settings: settings)
 ```
 
 
-### Logs Writer
+### Log Writer
 
 Implement logs writer for your purposes.
 
