@@ -43,10 +43,10 @@ networkService.request(endpoint: EndpointProtocol) { [weak self] (result: APIRes
 
 ### Settings
 
-Set up project settings which will be used by every NetworkService instance
+Set up project settings which will be used by every NetworkService's instance
 ```
 NetworkService.Settings.defaultLogger: NetworkLogsWriter? // nil by default
-public static var defaultDebugLogger: NetworkLogWriter? // DebugLogWriter by default
+NetworkService.Settings.defaultDebugLogger: NetworkLogWriter? // DebugLogWriter by default
 ```
 
 Set up settings appropriately for NetworkService instance
@@ -74,7 +74,7 @@ NetworkService.Settings.defaultDebugLogger.writeOptions = .none
 Implement logs writer for your purposes.
 
 ```
-class MyLogsWriter: NetworkLogsWriter {
+class MyLogWriter: NetworkLogsWriter {
     var writeOptions: LoggerWriteOptions { get }
     func write(log: String)
     
@@ -83,9 +83,8 @@ class MyLogsWriter: NetworkLogsWriter {
     func write<T>(endpoint: EndpointProtocol, result: APIResult<T>)
 }
 
-settings.networkLogger = MyLogsWriter()
-settings.debugLogger: NetworkLogWriter?
-
+NetworkService.Settings.networkLogger = MyLogWriter()
+NetworkService.Settings.debugLogger = MyLogWriter()
 ```
 
 
@@ -133,7 +132,7 @@ var cacheKey: String?
 
 ### Authors
 
-FNetworkService is developed by <a href="https://github.com/nitrey">Alexandr Antonov</a>. Extended and deployed by <a href="https://github.com/nitrey"> Eugene Orekhin</a>.
+FNetworkService is developed by <a href="https://github.com/nitrey">Alexandr Antonov</a>. Extended and deployed by <a href="https://github.com/ffs14k"> Eugene Orekhin</a>.
 
 
 ### License
