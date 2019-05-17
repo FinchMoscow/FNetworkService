@@ -24,6 +24,9 @@
 
 ### Usage
 
+> pod 'FNetworkService'
+
+
 ```
 struct AnyResponse: Decodable/Codable { /*...*/ }
 ```
@@ -68,6 +71,8 @@ let configuratedNetworkService = NetworkService(settings: settings)
 Change debug logger behaviour
 
 ```
+// .all by default
+// Options: .none; .onSuccess; .onError; .all
 NetworkService.Settings.defaultDebugLogger.writeOptions = .none
 ```
 
