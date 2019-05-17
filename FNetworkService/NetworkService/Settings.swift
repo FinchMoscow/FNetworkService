@@ -17,7 +17,7 @@ extension NetworkService {
         public var requestTimeout: TimeInterval = 10
         public var dateDecodingStrategy = JSONDecoder.DateDecodingStrategy.millisecondsSince1970
         public var networkLogger: NetworkLogWriter? = Settings.defaultLogger
-        public var debugLogger: NetworkLogWriter? = Settings.defaultDebugLogger
+        public var debugLogger: NetworkLogWriter = Settings.defaultDebugLogger
         
         
         // MARK: - Singleton
@@ -35,9 +35,9 @@ extension NetworkService {
         /// In order to change logger in particular NetworkService you may use `init(settings: NetworkService.Settings)`
         public static var defaultLogger: NetworkLogWriter?
         
-        /// Implement and assign your debug logger, or nil, if needed.
+        /// Implement and assign your debug logger if needed.
         /// In order to change debug logger in particular NetworkService you may use `init(settings: NetworkService.Settings)`
-        public static var defaultDebugLogger: NetworkLogWriter? = DebugLogWriter()
+        public static var defaultDebugLogger: NetworkLogWriter = DebugLogWriter()
     }
     
 }

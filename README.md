@@ -65,6 +65,12 @@ let configuratedNetworkService = NetworkService(settings: settings)
 
 ### Log Writer
 
+Change debug logger behaviour
+
+```
+NetworkService.Settings.defaultDebugLogger.writeOptions = .none
+```
+
 Implement logs writer for your purposes.
 
 ```
@@ -76,6 +82,10 @@ class MyLogsWriter: NetworkLogsWriter {
     var dateLocale: Locale { get } // default is "en_US"
     func write<T>(endpoint: EndpointProtocol, result: APIResult<T>)
 }
+
+settings.networkLogger = MyLogsWriter()
+settings.debugLogger: NetworkLogWriter?
+
 ```
 
 

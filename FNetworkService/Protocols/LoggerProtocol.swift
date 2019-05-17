@@ -10,7 +10,7 @@ private let endLine = "\n"
 
 public protocol NetworkLogWriter: AnyObject {
     
-    var writeOptions: LoggerWriteOptions { get }
+    var writeOptions: LoggerWriteOptions { get set }
     var dateLocale: Locale { get }
     
     func write(log: String)
