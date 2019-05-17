@@ -1,8 +1,12 @@
 ### Features
 
+- Codable/Decodable response
+- Soft to construct requests
+
+###### Supports
 - HTTP request;
 - HTTP request with response caching;
-- Upload HTTP requests;
+- Upload HTTP requests
 
 **Table of Contents**
 
@@ -29,10 +33,10 @@ let networkService = NetworkService()
 networkService.request(endpoint: EndpointProtocol, completion: <(Result<Decodable, APIError>) -> Void>)
 ```
 
-Use `public typealias APIResult<Model> = Swift.Result<Model, APIError>` in a completion block
+Use `public typealias APIResult<Model> = Swift.Result<Model, APIError>` in a completion block in order to explicitly specify Codable Type
 
 ```
-networkService.request(endpoint: EndpointProtocol) { [weak self] (result: AnyResponse) in
+networkService.request(endpoint: EndpointProtocol) { [weak self] (result: APIResult<AnyResponse>) in
 }
 ```
 
@@ -100,18 +104,22 @@ enum GoogleEndpoint: EndpointProtocol {
     
     var path: String {
         switch self {
-        case .main:                 return ""
+        case .main:             return ""
         case .search(let path): return path
         }
     }
     
 }
 ```
-
+`EndpointProtocol default properties, see a code for details`
+```
+var encoding: ParameterEncoding
+var headers: HTTPHeaders?
+var cacheKey: String?
+```
 ### Built With
 
 * [Alamofire](https://github.com/Alamofire/Alamofire)
-
 
 ### Authors
 
