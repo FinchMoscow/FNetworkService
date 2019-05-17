@@ -46,7 +46,7 @@ networkService.request(endpoint: EndpointProtocol) { [weak self] (result: APIRes
 Set up project settings which will be used by every NetworkService's instance
 ```
 NetworkService.Settings.defaultLogger: NetworkLogsWriter? // nil by default
-NetworkService.Settings.defaultDebugLogger: NetworkLogWriter? // DebugLogWriter by default
+NetworkService.Settings.defaultDebugLogger: NetworkLogWriter // DebugLogWriter by default
 ```
 
 Set up settings appropriately for NetworkService instance
@@ -57,7 +57,7 @@ settings.cacheRequestTimeout: TimeInterval
 settings.requestTimeout: TimeInterval
 settings.dateDecodingStrategy: JSONDecoder.DateDecodingStrategy
 settings.networkLogger: NetworkLogsWriter?
-settings.debugLogger: NetworkLogWriter?
+settings.debugLogger: NetworkLogWriter
 
 let configuratedNetworkService = NetworkService(settings: settings)
 ```
@@ -75,7 +75,7 @@ Implement logs writer for your purposes.
 
 ```
 class MyLogWriter: NetworkLogsWriter {
-    var writeOptions: LoggerWriteOptions { get }
+    var writeOptions: LoggerWriteOptions { get set }
     func write(log: String)
     
     // With default implemetation
