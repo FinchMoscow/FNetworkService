@@ -331,3 +331,181 @@ public class NetworkService {
     }
     
 }
+
+
+// MARK: - Request with HTTPURLResponse
+
+public extension NetworkService {
+    
+    // MARK: - Public methods
+    
+    func requestWithHTTPResponse<Response>( endpoint: EndpointProtocol,
+                                                   isCahingEnabled: Bool,
+                                                   completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Codable
+    {
+        
+        switch isCahingEnabled {
+        case false: requestWithHTTPResponse(endpoint: endpoint, completion: completion)
+        case true: cachebleRequestWithHTTPResponse(endpoint: endpoint, completion: completion)
+        }
+        
+    }
+    
+    
+    // MARK: - Simple request without cache
+    
+    func requestWithHTTPResponse<Response>(
+        endpoint: EndpointProtocol,
+        completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Decodable {
+        
+        guard let baseUrl = endpoint.baseUrl else {
+            completion(APIResult.failure(.noBaseUrl))
+            return
+        }
+        
+        let url = baseUrl.appendingPathComponent(endpoint.path)
+        
+        alamofireManager.request(url,
+                                 method: endpoint.method,
+                                 parameters: endpoint.parameters,
+                                 encoding: endpoint.encoding,
+                                 headers: endpoint.headers).response { [weak self] response in
+                                    
+                                    guard let self = self else { return }
+                                    
+                                    let result: APIResult<ModelWithResponse<Response>>
+                                    
+                                    defer {
+                                        DispatchQueue.main.async {
+                                            completion(result)
+                                        }
+                                        self.perfomLogWriting(endpoint: endpoint, result: result)
+                                    }
+                                    
+                                    guard let httpResponse = response.response else {
+                                        result = APIResult.failure(APIError.noNetwork)
+                                        return
+                                    }
+                                    
+                                    guard (self.settings.validCodes ~= httpResponse.statusCode) else {
+                                        let serverError = self.createServerError(from: response)
+                                        result = APIResult.failure(serverError)
+                                        return
+                                    }
+                                    
+                                    guard let data = response.data else {
+                                        let serverError = self.createServerError(from: response)
+                                        result = APIResult.failure(serverError)
+                                        return
+                                    }
+                                    
+                                    do {
+                                        let object = try self.decoder.decode(Response.self, from: data)
+                                        let model = ModelWithResponse(model: object,
+                                                                      response: response.response)
+                                        result = APIResult.success(model!)
+                                    } catch {
+                                        result = APIResult.failure(.decodingError)
+                                    }
+                                    
+        }
+        
+    }
+    
+    
+    // MARK: - Request with result caching
+    
+    func cachebleRequestWithHTTPResponse<Response>(
+        endpoint: EndpointProtocol,
+        completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Codable {
+        
+        guard let baseUrl = endpoint.baseUrl else {
+            completion(APIResult.failure(.noBaseUrl))
+            return
+        }
+        
+        let url = baseUrl.appendingPathComponent(endpoint.path)
+        
+        let cachedObject: Response? = retrieveCachedResponseIfExists(for: endpoint)
+        let cachedModel = ModelWithResponse(model: cachedObject, response: nil)
+        
+        let cachedResponseExists = (cachedModel != nil)
+        
+        var completionCalled = false // To avoid calling completion block twice (with network response and cached response)
+        
+        alamofireManager.request(url,
+                                 method: endpoint.method,
+                                 parameters: endpoint.parameters,
+                                 encoding: endpoint.encoding,
+                                 headers: endpoint.headers).response { [weak self] response in
+                                    
+                                    guard let self = self else { return }
+                                    
+                                    let result: APIResult<ModelWithResponse<Response>>
+                                    
+                                    defer {
+                                        
+                                        DispatchQueue.main.async {
+                                            
+                                            switch result {
+                                                
+                                            case .success(let object):
+                                                
+                                                self.cacheResponseIfNeeded(object.model, for: endpoint)
+                                                
+                                                if !completionCalled {
+                                                    completionCalled = true
+                                                    completion(result)
+                                                }
+                                                
+                                            case .failure(let error):
+                                                
+                                                if !completionCalled && !cachedResponseExists {
+                                                    completionCalled = true
+                                                    completion(result)
+                                                }
+                                            }
+                                            
+                                        }
+                                        
+                                        self.perfomLogWriting(endpoint: endpoint, result: result)
+                                    }
+                                    
+                                    guard let httpResponse = response.response else {
+                                        result = APIResult.failure(APIError.noNetwork)
+                                        return
+                                    }
+                                    
+                                    guard (self.settings.validCodes ~= httpResponse.statusCode) else {
+                                        let serverError = self.createServerError(from: response)
+                                        result = APIResult.failure(serverError)
+                                        return
+                                    }
+                                    
+                                    guard let data = response.data else {
+                                        let serverError = self.createServerError(from: response)
+                                        result = APIResult.failure(serverError)
+                                        return
+                                    }
+                                    
+                                    do {
+                                        let object = try self.decoder.decode(Response.self, from: data)
+                                        let model = ModelWithResponse(model: object, response: response.response)
+                                        result = APIResult.success(model!)
+                                    } catch {
+                                        result = APIResult.failure(.decodingError)
+                                    }
+                                    
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + settings.cacheRequestTimeout) {
+            
+            guard !completionCalled, let cachedResponse = cachedModel else { return }
+            
+            completionCalled = true
+            completion(.success(cachedResponse))
+        }
+        
+    }
+    
+}
