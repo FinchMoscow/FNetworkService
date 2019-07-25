@@ -12,8 +12,8 @@ public struct ModelWithResponse<Model> {
     
     // MARK: - Properties
     
-    let model: Model
-    let response: HTTPURLResponse?
+    public let model: Model
+    public let response: HTTPURLResponse?
     
     
     // MARK: - Init
