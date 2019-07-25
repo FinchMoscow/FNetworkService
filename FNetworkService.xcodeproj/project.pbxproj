@@ -21,6 +21,7 @@
 		5CDF4E1022709982006C1764 /* EndpointProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0522709982006C1764 /* EndpointProtocol.swift */; };
 		5CDF4E1222709982006C1764 /* LoggerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0722709982006C1764 /* LoggerProtocol.swift */; };
 		5CDF4E142270AF27006C1764 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E132270AF26006C1764 /* NetworkService.swift */; };
+		8E925EA022E9C4C800ADFFCD /* ModelWithResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E925E9F22E9C4C800ADFFCD /* ModelWithResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		5CDF4E0522709982006C1764 /* EndpointProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointProtocol.swift; sourceTree = "<group>"; };
 		5CDF4E0722709982006C1764 /* LoggerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerProtocol.swift; sourceTree = "<group>"; };
 		5CDF4E132270AF26006C1764 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		8E925E9F22E9C4C800ADFFCD /* ModelWithResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWithResponse.swift; sourceTree = "<group>"; };
 		D4386EB8E85EFFF3F3E764E5 /* libPods-FNetworkService.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FNetworkService.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -110,6 +112,7 @@
 				5CDF4DFD22709982006C1764 /* JSONEncoding.swift */,
 				5CDF4DFE22709982006C1764 /* APIError.swift */,
 				5CDF4DFF22709982006C1764 /* APIResult.swift */,
+				8E925E9F22E9C4C800ADFFCD /* ModelWithResponse.swift */,
 				5CDF4E0122709982006C1764 /* CommonHTTPHeader.swift */,
 				5CDF4E0322709982006C1764 /* LoggerWriteOptions.swift */,
 				5C53ADA5228D6FA400470F9C /* DebugLogsWriter.swift */,
@@ -251,6 +254,7 @@
 				5C53ADA6228D6FA400470F9C /* DebugLogsWriter.swift in Sources */,
 				5CDF4E1222709982006C1764 /* LoggerProtocol.swift in Sources */,
 				5CDF4E0822709982006C1764 /* Optional+stringValue.swift in Sources */,
+				8E925EA022E9C4C800ADFFCD /* ModelWithResponse.swift in Sources */,
 				5CDF4E0B22709982006C1764 /* APIResult.swift in Sources */,
 				5CDF4E1022709982006C1764 /* EndpointProtocol.swift in Sources */,
 				5CDF4E0A22709982006C1764 /* APIError.swift in Sources */,

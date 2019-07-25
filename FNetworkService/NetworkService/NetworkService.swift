@@ -44,7 +44,7 @@ public class NetworkService {
     
     public func request<Response>( endpoint: EndpointProtocol,
                                    isCahingEnabled: Bool,
-                                   completion: @escaping (APIResult<Response>) -> Void) where Response: Codable
+                                   completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Codable
     {
         
         switch isCahingEnabled {
@@ -59,7 +59,7 @@ public class NetworkService {
     
     public func request<Response>(
         endpoint: EndpointProtocol,
-        completion: @escaping (APIResult<Response>) -> Void) where Response: Decodable
+        completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Decodable
     {
         
         guard let baseUrl = endpoint.baseUrl else {
@@ -77,7 +77,7 @@ public class NetworkService {
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: APIResult<Response>
+                                    let result: APIResult<ModelWithResponse<Response>>
                                     
                                     defer {
                                         DispatchQueue.main.async {
@@ -105,7 +105,9 @@ public class NetworkService {
                                     
                                     do {
                                         let object = try self.decoder.decode(Response.self, from: data)
-                                        result = APIResult.success(object)
+                                        let model = ModelWithResponse(model: object,
+                                                                      response: response.response)
+                                        result = APIResult.success(model!)
                                     } catch {
                                         result = APIResult.failure(.decodingError)
                                     }
@@ -119,7 +121,7 @@ public class NetworkService {
     
     public func requestWithCache<Response>(
         endpoint: EndpointProtocol,
-        completion: @escaping (APIResult<Response>) -> Void) where Response: Codable {
+        completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Codable {
         
         guard let baseUrl = endpoint.baseUrl else {
             completion(APIResult.failure(.noBaseUrl))
@@ -128,8 +130,10 @@ public class NetworkService {
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
         
-        let cachedResponse: Response? = retrieveCachedResponseIfExists(for: endpoint)
-        let cachedResponseExists = (cachedResponse != nil)
+        let cachedObject: Response? = retrieveCachedResponseIfExists(for: endpoint)
+        let cachedModel = ModelWithResponse(model: cachedObject, response: nil)
+        
+        let cachedResponseExists = (cachedModel != nil)
         
         var completionCalled = false // To avoid calling completion block twice (with network response and cached response)
         
@@ -141,7 +145,7 @@ public class NetworkService {
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: APIResult<Response>
+                                    let result: APIResult<ModelWithResponse<Response>>
                                     
                                     defer {
                                         
@@ -151,7 +155,7 @@ public class NetworkService {
                                                 
                                             case .success(let object):
                                                 
-                                                self.cacheResponseIfNeeded(object, for: endpoint)
+                                                self.cacheResponseIfNeeded(object.model, for: endpoint)
                                                 
                                                 if !completionCalled {
                                                     completionCalled = true
@@ -190,7 +194,8 @@ public class NetworkService {
                                     
                                     do {
                                         let object = try self.decoder.decode(Response.self, from: data)
-                                        result = APIResult.success(object)
+                                        let model = ModelWithResponse(model: object, response: response.response)
+                                        result = APIResult.success(model!)
                                     } catch {
                                         result = APIResult.failure(.decodingError)
                                     }
@@ -199,7 +204,7 @@ public class NetworkService {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + settings.cacheRequestTimeout) {
             
-            guard !completionCalled, let cachedResponse = cachedResponse else { return }
+            guard !completionCalled, let cachedResponse = cachedModel else { return }
             
             completionCalled = true
             completion(.success(cachedResponse))
@@ -278,7 +283,9 @@ public class NetworkService {
     // MARK: - Cache helpers
     
     private func retrieveCachedResponseIfExists<Response: Codable>(for endpoint: EndpointProtocol) -> Response? {
+       
         guard let cacheKey = endpoint.cacheKey else { return nil }
+        
         return cacheStorage.retrieveValue(for: cacheKey)
     }
     
