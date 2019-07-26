@@ -22,6 +22,8 @@ public extension NetworkLogWriter {
     
     func write<T>(endpoint: EndpointProtocol, result: APIResult<T>) {
         
+        guard shouldPerformLogging(isResultSuccess: result.isSuccess) else { return }
+        
         let method = endpoint.method
         let domain = endpoint.baseUrl?.absoluteString ?? "Domain missed!"
         let path = endpoint.path
@@ -54,6 +56,28 @@ public extension NetworkLogWriter {
     
     private var currentDate: String {
         return String(describing: Date().description(with: dateLocale))
+    }
+    
+}
+
+
+// MARK: - shouldPerformLogging
+extension NetworkLogWriter {
+    
+    func shouldPerformLogging(isResultSuccess: Bool) -> Bool {
+        
+        if writeOptions == .all { return true }
+        if writeOptions == .none { return false }
+        
+        if isResultSuccess && writeOptions == .onSuccess {
+            return true
+        }
+        
+        if !isResultSuccess && writeOptions == .onError {
+            return true
+        }
+        
+        return false
     }
     
 }

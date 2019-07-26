@@ -9,8 +9,10 @@
 import Foundation
 import Alamofire
 
-public typealias Parameters = [String: Any] // A dictionary of parameters to apply to a `URLRequest`
-public typealias HTTPHeaders = [String: String] // A dictionary of headers to apply to a `URLRequest`
+/// A dictionary of parameters to apply to a `URLRequest`
+public typealias Parameters = [String: Any]
+/// A dictionary of headers to apply to a `URLRequest`
+public typealias HTTPHeaders = [String: String]
 public typealias HTTPMethod = Alamofire.HTTPMethod
 public typealias Headers = HTTPHeaders
 

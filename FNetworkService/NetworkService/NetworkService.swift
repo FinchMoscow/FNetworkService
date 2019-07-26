@@ -40,7 +40,7 @@ public class NetworkService {
     private let cacheStorage: Storage
     
     
-    // MARK: - Public methods
+    // MARK: - Public Convenience methods
     
     public func request<Response>( endpoint: EndpointProtocol,
                                    isCahingEnabled: Bool,
@@ -55,12 +55,101 @@ public class NetworkService {
     }
     
     
-    // MARK: - Simple request without cache
-    
-    public func request<Response>(
-        endpoint: EndpointProtocol,
-        completion: @escaping (APIResult<Response>) -> Void) where Response: Decodable
+    func requestWithHTTPResponse<Response>( endpoint: EndpointProtocol,
+                                            isCahingEnabled: Bool,
+                                            completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Codable
     {
+        
+        switch isCahingEnabled {
+        case false: requestWithHTTPResponse(endpoint: endpoint, completion: completion)
+        case true: cachebleRequestWithHTTPResponse(endpoint: endpoint, completion: completion)
+        }
+        
+    }
+    
+    
+    // MARK: - Requests helpers
+    
+    private func parse<Response: Decodable>(response: DefaultDataResponse) -> APIResult<Response> {
+        
+        let result: APIResult<Response>
+        
+        guard let httpResponse = response.response else {
+            result = APIResult.failure(APIError.noNetwork)
+            return result
+        }
+        
+        guard (self.settings.validCodes ~= httpResponse.statusCode) else {
+            let serverError = self.createServerError(from: response)
+            result = APIResult.failure(serverError)
+            return result
+        }
+        
+        guard let data = response.data else {
+            let serverError = self.createServerError(from: response)
+            result = APIResult.failure(serverError)
+            return result
+        }
+        
+        do {
+            let object = try self.decoder.decode(Response.self, from: data)
+            result = APIResult.success(object)
+        } catch {
+            result = APIResult.failure(.decodingError)
+            performDegubLogIfMatch(writeOptions: .all, .onError, text: String(data: data, encoding: .utf8) ?? "Reponse data is empty!")
+        }
+        
+        return result
+        
+    }
+    
+    private func createServerError(from response: DefaultDataResponse) -> APIError {
+        return APIError.serverError(error: response.error, response: response.response, data: response.data)
+    }
+    
+    
+    // MARK: - Cache helpers
+    
+    private func retrieveCachedResponseIfExists<Response: Codable>(for endpoint: EndpointProtocol) -> Response? {
+        guard let cacheKey = endpoint.cacheKey else { return nil }
+        return cacheStorage.retrieveValue(for: cacheKey)
+    }
+    
+    private func cacheResponseIfNeeded<Response: Codable>(_ response: Response, for endpoint: EndpointProtocol) {
+        guard let cacheKey = endpoint.cacheKey else { return }
+        cacheStorage.save(response, for: cacheKey)
+    }
+    
+    
+    // MARK: - Logger helpers
+    
+    private func perfomLogWriting<T>(endpoint: EndpointProtocol, result: APIResult<T>) {
+        
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            self?.networkLogger?.write(endpoint: endpoint, result: result)
+            self?.debugLogger?.write(endpoint: endpoint, result: result)
+        }
+        
+    }
+    
+    private func performDegubLogIfMatch(writeOptions: LoggerWriteOptions..., text: String) {
+        
+        guard let logger = debugLogger, writeOptions.contains(logger.writeOptions) else { return }
+        
+        DispatchQueue.global(qos: .background).async {
+            logger.write(log: text)
+        }
+        
+    }
+    
+}
+
+
+// MARK: - Simple HTTP request without cache
+public extension NetworkService {
+    
+    /// Simple HTTP request without cache
+    func request<Response>(endpoint: EndpointProtocol, completion: @escaping (APIResult<Response>) -> Void) where Response: Decodable {
         
         guard let baseUrl = endpoint.baseUrl else {
             completion(APIResult.failure(.noBaseUrl))
@@ -77,49 +166,27 @@ public class NetworkService {
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: APIResult<Response>
+                                    let result: APIResult<Response> = self.parse(response: response)
                                     
-                                    defer {
-                                        DispatchQueue.main.async {
-                                            completion(result)
-                                        }
-                                        self.perfomLogWriting(endpoint: endpoint, result: result)
+                                    DispatchQueue.main.async {
+                                        completion(result)
                                     }
                                     
-                                    guard let httpResponse = response.response else {
-                                        result = APIResult.failure(APIError.noNetwork)
-                                        return
-                                    }
-                                    
-                                    guard (self.settings.validCodes ~= httpResponse.statusCode) else {
-                                        let serverError = self.createServerError(from: response)
-                                        result = APIResult.failure(serverError)
-                                        return
-                                    }
-                                    
-                                    guard let data = response.data else {
-                                        let serverError = self.createServerError(from: response)
-                                        result = APIResult.failure(serverError)
-                                        return
-                                    }
-                                    
-                                    do {
-                                        let object = try self.decoder.decode(Response.self, from: data)
-                                        result = APIResult.success(object)
-                                    } catch {
-                                        result = APIResult.failure(.decodingError)
-                                    }
+                                    self.perfomLogWriting(endpoint: endpoint, result: result)
                                     
         }
         
     }
     
+}
+
+
+// MARK: - Simple HTTP request with cache // TODO refactoring
+public extension NetworkService {
     
-    // MARK: - Request with result caching
-    
-    public func requestWithCache<Response>(
-        endpoint: EndpointProtocol,
-        completion: @escaping (APIResult<Response>) -> Void) where Response: Codable {
+    /// Simple HTTP request with cache.
+    /// Note you shoud provide cacheKey within EndpointProtocol
+    func requestWithCache<Response: Codable>(endpoint: EndpointProtocol, completion: @escaping (APIResult<Response>) -> Void) {
         
         guard let baseUrl = endpoint.baseUrl else {
             completion(APIResult.failure(.noBaseUrl))
@@ -141,59 +208,32 @@ public class NetworkService {
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: APIResult<Response>
+                                    let result: APIResult<Response> = self.parse(response: response)
                                     
-                                    defer {
+                                    DispatchQueue.main.async {
                                         
-                                        DispatchQueue.main.async {
+                                        switch result {
                                             
-                                            switch result {
-                                                
-                                            case .success(let object):
-                                                
-                                                self.cacheResponseIfNeeded(object, for: endpoint)
-                                                
-                                                if !completionCalled {
-                                                    completionCalled = true
-                                                    completion(result)
-                                                }
-                                                
-                                            case .failure(let error):
-                                                
-                                                if !completionCalled && !cachedResponseExists {
-                                                    completionCalled = true
-                                                    completion(result)
-                                                }
+                                        case .success(let object):
+                                            
+                                            self.cacheResponseIfNeeded(object, for: endpoint)
+                                            
+                                            if !completionCalled {
+                                                completionCalled = true
+                                                completion(result)
                                             }
                                             
+                                        case .failure:
+                                            
+                                            if !completionCalled && !cachedResponseExists {
+                                                completionCalled = true
+                                                completion(result)
+                                            }
                                         }
                                         
-                                        self.perfomLogWriting(endpoint: endpoint, result: result)
                                     }
                                     
-                                    guard let httpResponse = response.response else {
-                                        result = APIResult.failure(APIError.noNetwork)
-                                        return
-                                    }
-                                    
-                                    guard (self.settings.validCodes ~= httpResponse.statusCode) else {
-                                        let serverError = self.createServerError(from: response)
-                                        result = APIResult.failure(serverError)
-                                        return
-                                    }
-                                    
-                                    guard let data = response.data else {
-                                        let serverError = self.createServerError(from: response)
-                                        result = APIResult.failure(serverError)
-                                        return
-                                    }
-                                    
-                                    do {
-                                        let object = try self.decoder.decode(Response.self, from: data)
-                                        result = APIResult.success(object)
-                                    } catch {
-                                        result = APIResult.failure(.decodingError)
-                                    }
+                                    self.perfomLogWriting(endpoint: endpoint, result: result)
                                     
         }
         
@@ -207,10 +247,13 @@ public class NetworkService {
         
     }
     
+}
+
+
+// MARK: - Upload Request
+public extension NetworkService {
     
-    // MARK: - Upload request
-    
-    public func uploadRequest<Response>(
+    func uploadRequest<Response>(
         endpoint: EndpointProtocol,
         data: Data,
         progressHandler: ((Double) -> Void)? = nil,
@@ -231,38 +274,13 @@ public class NetworkService {
             
             guard let self = self else { return }
             
-            let result: APIResult<Response>
+            let result: APIResult<Response> = self.parse(response: response)
             
-            defer {
-                DispatchQueue.main.async {
-                    completion(result)
-                }
-                self.perfomLogWriting(endpoint: endpoint, result: result)
+            DispatchQueue.main.async {
+                completion(result)
             }
             
-            guard let httpResponse = response.response else {
-                result = APIResult.failure(APIError.noNetwork)
-                return
-            }
-            
-            guard (self.settings.validCodes ~= httpResponse.statusCode) else {
-                let serverError = self.createServerError(from: response)
-                result = APIResult.failure(serverError)
-                return
-            }
-            
-            guard let data = response.data else {
-                let serverError = self.createServerError(from: response)
-                result = APIResult.failure(serverError)
-                return
-            }
-            
-            do {
-                let object = try self.decoder.decode(Response.self, from: data)
-                result = APIResult.success(object)
-            } catch {
-                result = APIResult.failure(.decodingError)
-            }
+            self.perfomLogWriting(endpoint: endpoint, result: result)
             
         }
         
@@ -274,82 +292,11 @@ public class NetworkService {
         
     }
     
-    
-    // MARK: - Cache helpers
-    
-    private func retrieveCachedResponseIfExists<Response: Codable>(for endpoint: EndpointProtocol) -> Response? {
-        guard let cacheKey = endpoint.cacheKey else { return nil }
-        return cacheStorage.retrieveValue(for: cacheKey)
-    }
-    
-    private func cacheResponseIfNeeded<Response: Codable>(_ response: Response, for endpoint: EndpointProtocol) {
-        guard let cacheKey = endpoint.cacheKey else { return }
-        cacheStorage.save(response, for: cacheKey)
-    }
-    
-    
-    // MARK: - Helper methods
-    
-    private func createServerError(from response: DefaultDataResponse) -> APIError {
-        return APIError.serverError(error: response.error, response: response.response, data: response.data)
-    }
-    
-    private func perfomLogWriting<T>(endpoint: EndpointProtocol, result: APIResult<T>) {
-        
-        DispatchQueue.global(qos: .background).async {
-            self.writeLogsIfNeeded(using: self.networkLogger, with: endpoint, and: result)
-            self.writeLogsIfNeeded(using: self.debugLogger, with: endpoint, and: result)
-        }
-        
-    }
-    
-    private func writeLogsIfNeeded<T>(using logger: NetworkLogWriter?,
-                                      with endpoint: EndpointProtocol,
-                                      and result: APIResult<T>)
-    {
-        
-        guard let logger = logger else { return }
-        
-        switch logger.writeOptions {
-            
-        case .all:
-            logger.write(endpoint: endpoint, result: result)
-            
-        case .onSuccess:
-            guard result.isSuccess else { return }
-            logger.write(endpoint: endpoint, result: result)
-            
-        case .onError:
-            guard result.isFailure else { return }
-            logger.write(endpoint: endpoint, result: result)
-
-        case .none:
-            return
-            
-        }
-        
-    }
-    
 }
 
 
-// MARK: - Request with HTTPURLResponse
-
+// MARK: - Request with boxed Codable and HTTPURLResponse
 public extension NetworkService {
-    
-    // MARK: - Public methods
-    
-    func requestWithHTTPResponse<Response>( endpoint: EndpointProtocol,
-                                                   isCahingEnabled: Bool,
-                                                   completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Codable
-    {
-        
-        switch isCahingEnabled {
-        case false: requestWithHTTPResponse(endpoint: endpoint, completion: completion)
-        case true: cachebleRequestWithHTTPResponse(endpoint: endpoint, completion: completion)
-        }
-        
-    }
     
     
     // MARK: - Simple request without cache

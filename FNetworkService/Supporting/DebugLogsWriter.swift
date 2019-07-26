@@ -11,14 +11,15 @@ private let separator = "<<<-RESPONSE->>>"
 
 final class DebugLogWriter: NetworkLogWriter {
     
+    var writeOptions: LoggerWriteOptions = .all
     
     func write(log: String) {
         print(log)
     }
     
-    var writeOptions: LoggerWriteOptions = .all
-    
     func write<T>(endpoint: EndpointProtocol, result: APIResult<T>) {
+        
+        guard shouldPerformLogging(isResultSuccess: result.isSuccess) else { return }
         
         let responseStatus: String = result.isSuccess ? "SUCCESS" : "FAILURE"
         let method = endpoint.method

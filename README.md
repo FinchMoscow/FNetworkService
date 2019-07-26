@@ -15,9 +15,8 @@
 3. [Log Writer](#Log-Writer)
 4. [Constructing Endpoints](#Constructing-Endpoints)
 5. [Built With](#Built-With)
-6. [Built With](#Built-With)
-7. [Authors](#Authors)
-8. [License](#License)
+6. [Authors](#Authors)
+7. [License](#License)
 
 
 
