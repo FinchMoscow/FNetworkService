@@ -1,78 +1,23 @@
 //
-//  NetworkService.swift
+//  DNetworkService.swift
+//  FNetworkService
 //
-//  Created by ALEXANDER ANTONOV on 17/11/2018.
-//  Copyright © 2018 Finch. All rights reserved.
+//  Created by Eugene on 06/09/2019.
+//  Copyright © 2019 Finch. All rights reserved.
 //
 
-import Foundation
 import Alamofire
 
 // MARK: - Network Service Implementation
-public class NetworkService {
+public class DNetworkService: BaseNetworkService, NetworkServiceProtocol {
     
-    // MARK: - Init
+    // MARK: - NetworkServiceProtocol
     
-    public init(settings: Settings = Settings.default) {
+    public typealias Success = DecodableResponse
+    
+    public func parse(_ response: DefaultDataResponse) -> APIResult<DecodableResponse> {
         
-        self.settings = settings
-        self.networkLogger = settings.networkLogger
-        self.debugLogger = settings.debugLogger
-        
-        self.decoder = JSONDecoder()
-        self.decoder.dateDecodingStrategy = settings.dateDecodingStrategy
-        
-        let sessionConfiguration = URLSessionConfiguration.default
-        sessionConfiguration.timeoutIntervalForRequest = settings.requestTimeout
-        self.alamofireManager = Alamofire.SessionManager(configuration: sessionConfiguration)
-        
-        self.cacheStorage = GenericStorage()
-    }
-    
-    
-    // MARK: - Properties
-    
-    private let debugLogger: NetworkLogWriter
-    private let networkLogger: NetworkLogWriter?
-    private let settings: Settings
-    private let decoder: JSONDecoder
-    private let alamofireManager: SessionManager
-    private let cacheStorage: Storage
-    
-    
-    // MARK: - Public Convenience methods
-    
-    public func request<Response>( endpoint: EndpointProtocol,
-                                   isCahingEnabled: Bool,
-                                   completion: @escaping (APIResult<Response>) -> Void) where Response: Codable
-    {
-        
-        switch isCahingEnabled {
-        case false: request(endpoint: endpoint, completion: completion)
-        case true: requestWithCache(endpoint: endpoint, completion: completion)
-        }
-        
-    }
-    
-    
-    func requestWithHTTPResponse<Response>( endpoint: EndpointProtocol,
-                                            isCahingEnabled: Bool,
-                                            completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Codable
-    {
-        
-        switch isCahingEnabled {
-        case false: requestWithHTTPResponse(endpoint: endpoint, completion: completion)
-        case true: cachebleRequestWithHTTPResponse(endpoint: endpoint, completion: completion)
-        }
-        
-    }
-    
-    
-    // MARK: - Requests helpers
-    
-    private func parse<Response: Decodable>(response: DefaultDataResponse) -> APIResult<Response> {
-        
-        let result: APIResult<Response>
+        let result: APIResult<DecodableResponse>
         
         guard let httpResponse = response.response else {
             result = APIResult.failure(APIError.noNetwork)
@@ -103,53 +48,21 @@ public class NetworkService {
         
     }
     
-    private func createServerError(from response: DefaultDataResponse) -> APIError {
-        return APIError.serverError(error: response.error, response: response.response, data: response.data)
-    }
-    
-    
-    // MARK: - Cache helpers
-    
-    private func retrieveCachedResponseIfExists<Response: Codable>(for endpoint: EndpointProtocol) -> Response? {
-        guard let cacheKey = endpoint.cacheKey else { return nil }
-        return cacheStorage.retrieveValue(for: cacheKey)
-    }
-    
-    private func cacheResponseIfNeeded<Response: Codable>(_ response: Response, for endpoint: EndpointProtocol) {
-        guard let cacheKey = endpoint.cacheKey else { return }
-        cacheStorage.save(response, for: cacheKey)
-    }
-    
-    
-    // MARK: - Logger helpers
-    
-    private func perfomLogWriting<T>(endpoint: EndpointProtocol, result: APIResult<T>) {
+    public func request(endpoint: EndpointProtocol, isCaheEnabled: Bool, completion: @escaping (APIResult<DecodableResponse>) -> Void) {
         
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            self?.networkLogger?.write(endpoint: endpoint, result: result)
-            self?.debugLogger.write(endpoint: endpoint, result: result)
+        guard let _ ensureBaseUrlProvided(endpoint: endpoint) else { completion(.failure(.noBaseUrl)); return }
+        
+        switch isCaheEnabled {
+        case true:
+            
+        case false:
+            break
         }
         
     }
-    
-    private func performDegubLogIfMatch(writeOptions: LoggerWriteOptions..., text: String) {
-        
-        guard writeOptions.contains(debugLogger.writeOptions) else { return }
-        
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            self?.debugLogger.write(log: text)
-        }
-        
-    }
-    
-}
-
-
-// MARK: - Simple HTTP request without cache
-public extension NetworkService {
     
     /// Simple HTTP request without cache
-    func request<Response>(endpoint: EndpointProtocol, completion: @escaping (APIResult<Response>) -> Void) where Response: Decodable {
+    func requestWOCache(endpoint: EndpointProtocol, completion: @escaping (APIResult<Response>) -> Void) where Response: Decodable {
         
         guard let baseUrl = endpoint.baseUrl else {
             completion(APIResult.failure(.noBaseUrl))
@@ -177,6 +90,45 @@ public extension NetworkService {
         }
         
     }
+    
+    private func createServerError(from response: DefaultDataResponse) -> APIError {
+        return APIError.serverError(error: response.error, response: response.response, data: response.data)
+    }
+    
+    
+    // MARK: - Cache helpers
+    
+//    private func retrieveCachedResponseIfExists<Response: Codable>(for endpoint: EndpointProtocol) -> Response? {
+//        guard let cacheKey = endpoint.cacheKey else { return nil }
+//        return cacheStorage.retrieveValue(for: cacheKey)
+//    }
+//
+//    private func cacheResponseIfNeeded<Response: Codable>(_ response: Response, for endpoint: EndpointProtocol) {
+//        guard let cacheKey = endpoint.cacheKey else { return }
+//        cacheStorage.save(response, for: cacheKey)
+//    }
+//
+//
+//    // MARK: - Logger helpers
+//
+//    private func perfomLogWriting<T>(endpoint: EndpointProtocol, result: APIResult<T>) {
+//
+//        DispatchQueue.global(qos: .background).async { [weak self] in
+//            self?.networkLogger?.write(endpoint: endpoint, result: result)
+//            self?.debugLogger.write(endpoint: endpoint, result: result)
+//        }
+//
+//    }
+//
+//    private func performDegubLogIfMatch(writeOptions: LoggerWriteOptions..., text: String) {
+//
+//        guard writeOptions.contains(debugLogger.writeOptions) else { return }
+//
+//        DispatchQueue.global(qos: .background).async { [weak self] in
+//            self?.debugLogger.write(log: text)
+//        }
+//
+//    }
     
 }
 
