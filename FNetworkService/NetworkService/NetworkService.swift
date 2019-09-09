@@ -26,7 +26,7 @@ public class NetworkService {
         sessionConfiguration.timeoutIntervalForRequest = settings.requestTimeout
         self.alamofireManager = Alamofire.SessionManager(configuration: sessionConfiguration)
         
-        self.cacheStorage = GenericStorage()
+        self.cacheStorage = GenericCodableStorage()
     }
     
     
@@ -37,7 +37,7 @@ public class NetworkService {
     private let settings: Settings
     private let decoder: JSONDecoder
     private let alamofireManager: SessionManager
-    private let cacheStorage: Storage
+    private let cacheStorage: CodableStorage
     
     
     // MARK: - Public Convenience methods

@@ -1,20 +1,34 @@
 //
 //  GenericStorage.swift
-//  THT-Premier
+//  FNetworkService
 //
-//  Created by Alexander Antonov on 17/11/2018.
-//  Copyright © 2018 Finch. All rights reserved.
+//  Created by Eugene on 09/09/2019.
+//  Copyright © 2019 Finch. All rights reserved.
 //
 
 import Foundation
 
+// TODO - Rafactoring
 protocol Storage {
     
-    func save<Value: Codable>(_ value: Value, for key: String)
-    func retrieveValue<Value: Codable>(for key: String) -> Value?
+    func save(_ value: Data, httpMeta: HTTPURLResponse, for key: String)
+    func retrieveValue(for key: String) -> (data: Data, httpMeta: HTTPURLResponse)?
     
     func clearStorage()
     func deleteStoredValue(for key: String)
+}
+
+extension Storage {
+    
+    func retrieveValue(for key: String) -> BaseDataResponse? {
+        guard let cache = retrieveValue(for: key) else { return nil }
+        return BaseDataResponse(httpMeta: cache.httpMeta, payload: cache.data)
+    }
+    
+    func save(_ value: BaseDataResponse, for key: String) {
+        save(value.payload, httpMeta: value.httpMeta, for: key)
+    }
+    
 }
 
 final class GenericStorage: Storage {
@@ -28,36 +42,34 @@ final class GenericStorage: Storage {
     
     // MARK: - Public methods
     
-    func save<Value: Codable>(_ value: Value, for key: String) {
-                
+    func save(_ value: Data, httpMeta: HTTPURLResponse, for key: String) {
+        
         DispatchQueue.global(qos: .userInitiated).async {
-            
-            guard let data = try? JSONEncoder().encode(value) else {
-                return
-            }
             let fileUrl = self.buildFileUrl(with: key)
-            try? data.write(to: fileUrl)
+            let fileMetaUrl = self.buildFileUrl(with: key + "httpMeta")
+            try? value.write(to: fileUrl)
+            try? httpMeta.dataCache.write(to: fileMetaUrl)
         }
         
     }
     
-    func retrieveValue<Value: Codable>(for key: String) -> Value? {
+    func retrieveValue(for key: String) -> (data: Data, httpMeta: HTTPURLResponse)? {
         
         let fileUrl = buildFileUrl(with: key)
+        let fileHttpMetaUrl = buildFileUrl(with: key + "httpMeta")
         
         guard FileManager.default.fileExists(atPath: fileUrl.path) else {
             return nil
         }
         
-        do {
-            let data = try Data(contentsOf: fileUrl)
-            return try JSONDecoder().decode(Value.self, from: data)
-            
-        } catch let error {
-            print("STORAGE ERROR: \(error)")
+        guard let data = try? Data(contentsOf: fileUrl),
+            let httpMetaData = try? Data(contentsOf: fileHttpMetaUrl),
+            let url = URL(string: String(data: httpMetaData, encoding: .utf8) ?? ""),
+            let httpMeta = HTTPURLResponse(url: url, statusCode: 400, httpVersion: nil, headerFields: nil) else {
             return nil
         }
         
+        return (data, httpMeta)
     }
     
     func clearStorage() {
@@ -93,6 +105,16 @@ final class GenericStorage: Storage {
         }
         
         try? fileManager.createDirectory(at: folder, withIntermediateDirectories: false, attributes: nil)
+    }
+    
+}
+
+
+extension HTTPURLResponse {
+    
+    var dataCache: Data {
+        let urlString = url?.absoluteString ?? ""
+        return (urlString).data(using: .utf8) ?? Data()
     }
     
 }

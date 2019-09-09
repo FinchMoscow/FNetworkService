@@ -8,15 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		2474118968E9E44C81C6274F /* libPods-FNetworkService.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4386EB8E85EFFF3F3E764E5 /* libPods-FNetworkService.a */; };
-		5C0932CF23226250002A6EEC /* NetworkServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0932CE23226250002A6EEC /* NetworkServiceProtocol.swift */; };
 		5C0932D123229559002A6EEC /* RawResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0932D023229559002A6EEC /* RawResponse.swift */; };
-		5C0932D3232296C9002A6EEC /* RawNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0932D2232296C9002A6EEC /* RawNetworkService.swift */; };
 		5C0932D5232297F6002A6EEC /* BaseNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0932D4232297F6002A6EEC /* BaseNetworkService.swift */; };
-		5C0932D72322ACBD002A6EEC /* DNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0932D62322ACBD002A6EEC /* DNetworkService.swift */; };
+		5C0932D72322ACBD002A6EEC /* CNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0932D62322ACBD002A6EEC /* CNetworkService.swift */; };
+		5C0932DA23269D17002A6EEC /* GenericStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0932D923269D17002A6EEC /* GenericStorage.swift */; };
 		5C53ADA4228D6D7400470F9C /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C53ADA3228D6D7300470F9C /* Settings.swift */; };
 		5C53ADA6228D6FA400470F9C /* DebugLogsWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C53ADA5228D6FA400470F9C /* DebugLogsWriter.swift */; };
 		5CDF4DF22270954A006C1764 /* FNetworkService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5CDF4DF02270954A006C1764 /* FNetworkService.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5CDF4DFA22709979006C1764 /* GenericStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DF922709979006C1764 /* GenericStorage.swift */; };
+		5CDF4DFA22709979006C1764 /* CodableStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DF922709979006C1764 /* CodableStorage.swift */; };
 		5CDF4E0822709982006C1764 /* Optional+stringValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DFC22709982006C1764 /* Optional+stringValue.swift */; };
 		5CDF4E0922709982006C1764 /* JSONEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DFD22709982006C1764 /* JSONEncoding.swift */; };
 		5CDF4E0A22709982006C1764 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DFE22709982006C1764 /* APIError.swift */; };
@@ -32,17 +31,16 @@
 /* Begin PBXFileReference section */
 		003BE1DD5C3182BEC54619FA /* Pods-FNetworkService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FNetworkService.debug.xcconfig"; path = "Target Support Files/Pods-FNetworkService/Pods-FNetworkService.debug.xcconfig"; sourceTree = "<group>"; };
 		05B31105F6D1CE3F13A0AB06 /* Pods-FNetworkService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FNetworkService.release.xcconfig"; path = "Target Support Files/Pods-FNetworkService/Pods-FNetworkService.release.xcconfig"; sourceTree = "<group>"; };
-		5C0932CE23226250002A6EEC /* NetworkServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProtocol.swift; sourceTree = "<group>"; };
 		5C0932D023229559002A6EEC /* RawResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawResponse.swift; sourceTree = "<group>"; };
-		5C0932D2232296C9002A6EEC /* RawNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawNetworkService.swift; sourceTree = "<group>"; };
 		5C0932D4232297F6002A6EEC /* BaseNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNetworkService.swift; sourceTree = "<group>"; };
-		5C0932D62322ACBD002A6EEC /* DNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNetworkService.swift; sourceTree = "<group>"; };
+		5C0932D62322ACBD002A6EEC /* CNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CNetworkService.swift; sourceTree = "<group>"; };
+		5C0932D923269D17002A6EEC /* GenericStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericStorage.swift; sourceTree = "<group>"; };
 		5C53ADA3228D6D7300470F9C /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		5C53ADA5228D6FA400470F9C /* DebugLogsWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogsWriter.swift; sourceTree = "<group>"; };
 		5CDF4DED2270954A006C1764 /* FNetworkService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FNetworkService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CDF4DF02270954A006C1764 /* FNetworkService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FNetworkService.h; sourceTree = "<group>"; };
 		5CDF4DF12270954A006C1764 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5CDF4DF922709979006C1764 /* GenericStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericStorage.swift; sourceTree = "<group>"; };
+		5CDF4DF922709979006C1764 /* CodableStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodableStorage.swift; sourceTree = "<group>"; };
 		5CDF4DFC22709982006C1764 /* Optional+stringValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Optional+stringValue.swift"; sourceTree = "<group>"; };
 		5CDF4DFD22709982006C1764 /* JSONEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONEncoding.swift; sourceTree = "<group>"; };
 		5CDF4DFE22709982006C1764 /* APIError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
@@ -110,7 +108,8 @@
 		5CDF4DF822709979006C1764 /* Caching */ = {
 			isa = PBXGroup;
 			children = (
-				5CDF4DF922709979006C1764 /* GenericStorage.swift */,
+				5CDF4DF922709979006C1764 /* CodableStorage.swift */,
+				5C0932D923269D17002A6EEC /* GenericStorage.swift */,
 			);
 			path = Caching;
 			sourceTree = "<group>";
@@ -118,7 +117,6 @@
 		5CDF4DFB22709982006C1764 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
-				5C0932CE23226250002A6EEC /* NetworkServiceProtocol.swift */,
 				5CDF4DFC22709982006C1764 /* Optional+stringValue.swift */,
 				5CDF4DFD22709982006C1764 /* JSONEncoding.swift */,
 				5CDF4DFE22709982006C1764 /* APIError.swift */,
@@ -143,12 +141,11 @@
 		5CDF4E152270B19C006C1764 /* NetworkService */ = {
 			isa = PBXGroup;
 			children = (
-				5C0932D2232296C9002A6EEC /* RawNetworkService.swift */,
 				5CDF4E132270AF26006C1764 /* NetworkService.swift */,
 				5C53ADA3228D6D7300470F9C /* Settings.swift */,
 				5C0932D023229559002A6EEC /* RawResponse.swift */,
 				5C0932D4232297F6002A6EEC /* BaseNetworkService.swift */,
-				5C0932D62322ACBD002A6EEC /* DNetworkService.swift */,
+				5C0932D62322ACBD002A6EEC /* CNetworkService.swift */,
 			);
 			path = NetworkService;
 			sourceTree = "<group>";
@@ -273,17 +270,16 @@
 				5CDF4E0B22709982006C1764 /* APIResult.swift in Sources */,
 				5CDF4E1022709982006C1764 /* EndpointProtocol.swift in Sources */,
 				5CDF4E0A22709982006C1764 /* APIError.swift in Sources */,
-				5C0932D3232296C9002A6EEC /* RawNetworkService.swift in Sources */,
-				5CDF4DFA22709979006C1764 /* GenericStorage.swift in Sources */,
+				5CDF4DFA22709979006C1764 /* CodableStorage.swift in Sources */,
 				5CDF4E0922709982006C1764 /* JSONEncoding.swift in Sources */,
+				5C0932DA23269D17002A6EEC /* GenericStorage.swift in Sources */,
 				5CDF4E0D22709982006C1764 /* CommonHTTPHeader.swift in Sources */,
-				5C0932CF23226250002A6EEC /* NetworkServiceProtocol.swift in Sources */,
 				5CDF4E142270AF27006C1764 /* NetworkService.swift in Sources */,
 				5C0932D5232297F6002A6EEC /* BaseNetworkService.swift in Sources */,
 				5CDF4E0F22709982006C1764 /* LoggerWriteOptions.swift in Sources */,
 				5C0932D123229559002A6EEC /* RawResponse.swift in Sources */,
 				5C53ADA4228D6D7400470F9C /* Settings.swift in Sources */,
-				5C0932D72322ACBD002A6EEC /* DNetworkService.swift in Sources */,
+				5C0932D72322ACBD002A6EEC /* CNetworkService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
