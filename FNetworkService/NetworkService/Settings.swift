@@ -15,6 +15,7 @@ extension NetworkService {
         public var validCodes = (200 ..< 300)
         public var cacheRequestTimeout: TimeInterval = 0.3
         public var requestTimeout: TimeInterval = 10
+        public var additionalHeaders: [String: String]?
         public var dateDecodingStrategy = JSONDecoder.DateDecodingStrategy.millisecondsSince1970
         public var networkLogger: NetworkLogWriter? = Settings.defaultLogger
         public var debugLogger: NetworkLogWriter = Settings.defaultDebugLogger

@@ -74,6 +74,8 @@ public class NetworkService {
         
         let result: APIResult<Response>
         
+        performDegubLogIfMatch(writeOptions: .all, .onError, text: String(data: response.data ?? Data(), encoding: .utf8) ?? "Reponse data is empty!")
+        
         guard let httpResponse = response.response else {
             result = APIResult.failure(APIError.noNetwork)
             return result
@@ -96,11 +98,22 @@ public class NetworkService {
             result = APIResult.success(object)
         } catch {
             result = APIResult.failure(.decodingError)
-            performDegubLogIfMatch(writeOptions: .all, .onError, text: String(data: data, encoding: .utf8) ?? "Reponse data is empty!")
         }
         
         return result
         
+    }
+    
+    private func mergeHeaders(endpointHeaders: HTTPHeaders?) -> HTTPHeaders? {
+        
+        guard var endpointHeaders = endpointHeaders else { return settings.additionalHeaders }
+        guard let additionalHeaders = settings.additionalHeaders else { return endpointHeaders }
+        
+        additionalHeaders.forEach({ key, value in
+            endpointHeaders.updateValue(value, forKey: key)
+        })
+        
+        return endpointHeaders
     }
     
     private func createServerError(from response: DefaultDataResponse) -> APIError {
@@ -157,12 +170,13 @@ public extension NetworkService {
         }
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
+        let headers = mergeHeaders(endpointHeaders: endpoint.headers)
         
         alamofireManager.request(url,
                                  method: endpoint.method,
                                  parameters: endpoint.parameters,
                                  encoding: endpoint.encoding,
-                                 headers: endpoint.headers).response { [weak self] response in
+                                 headers: headers).response { [weak self] response in
                                     
                                     guard let self = self else { return }
                                     
@@ -194,6 +208,7 @@ public extension NetworkService {
         }
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
+        let headers = mergeHeaders(endpointHeaders: endpoint.headers)
         
         let cachedResponse: Response? = retrieveCachedResponseIfExists(for: endpoint)
         let cachedResponseExists = (cachedResponse != nil)
@@ -204,7 +219,7 @@ public extension NetworkService {
                                  method: endpoint.method,
                                  parameters: endpoint.parameters,
                                  encoding: endpoint.encoding,
-                                 headers: endpoint.headers).response { [weak self] response in
+                                 headers: headers).response { [weak self] response in
                                     
                                     guard let self = self else { return }
                                     
@@ -265,6 +280,7 @@ public extension NetworkService {
         }
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
+        let headers = mergeHeaders(endpointHeaders: endpoint.headers)
         
         let progressUpdateBlock: (Progress) -> Void = { progress in
             progressHandler?(progress.fractionCompleted)
@@ -286,7 +302,7 @@ public extension NetworkService {
         
         alamofireManager.upload(data, to: url,
                                 method: endpoint.method,
-                                headers: endpoint.headers)
+                                headers: headers)
             .uploadProgress(queue: DispatchQueue.main, closure: progressUpdateBlock)
             .response(completionHandler: responseHandler)
         
@@ -311,12 +327,13 @@ public extension NetworkService {
         }
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
+        let headers = mergeHeaders(endpointHeaders: endpoint.headers)
         
         alamofireManager.request(url,
                                  method: endpoint.method,
                                  parameters: endpoint.parameters,
                                  encoding: endpoint.encoding,
-                                 headers: endpoint.headers).response { [weak self] response in
+                                 headers: headers).response { [weak self] response in
                                     
                                     guard let self = self else { return }
                                     
@@ -372,6 +389,7 @@ public extension NetworkService {
         }
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
+        let headers = mergeHeaders(endpointHeaders: endpoint.headers)
         
         let cachedObject: Response? = retrieveCachedResponseIfExists(for: endpoint)
         let cachedModel = ModelWithResponse(model: cachedObject, response: nil)
@@ -384,7 +402,7 @@ public extension NetworkService {
                                  method: endpoint.method,
                                  parameters: endpoint.parameters,
                                  encoding: endpoint.encoding,
-                                 headers: endpoint.headers).response { [weak self] response in
+                                 headers: headers).response { [weak self] response in
                                     
                                     guard let self = self else { return }
                                     
