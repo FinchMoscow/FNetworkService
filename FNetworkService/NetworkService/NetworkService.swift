@@ -106,8 +106,8 @@ public class NetworkService {
     
     private func mergeHeaders(endpointHeaders: HTTPHeaders?) -> HTTPHeaders? {
         
-        guard var endpointHeaders = endpointHeaders else { return settings.additionalHeaders }
-        guard let additionalHeaders = settings.additionalHeaders else { return endpointHeaders }
+        guard var endpointHeaders = endpointHeaders else { return settings.requestSettings.additionalHeaders }
+        guard let additionalHeaders = settings.requestSettings.additionalHeaders else { return endpointHeaders }
         
         additionalHeaders.forEach({ key, value in
             endpointHeaders.updateValue(value, forKey: key)

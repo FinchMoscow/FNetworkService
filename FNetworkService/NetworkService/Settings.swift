@@ -15,13 +15,13 @@ extension NetworkService {
         public var validCodes = (200 ..< 300)
         public var cacheRequestTimeout: TimeInterval = 0.3
         public var requestTimeout: TimeInterval = 10
-        public var additionalHeaders: [String: String]?
         public var dateDecodingStrategy = JSONDecoder.DateDecodingStrategy.millisecondsSince1970
+        public var requestSettings: RequestSetting = Settings.defaultRequestSettings
         public var networkLogger: NetworkLogWriter? = Settings.defaultLogger
         public var debugLogger: NetworkLogWriter = Settings.defaultDebugLogger
         
         
-        // MARK: - Singleton
+        // MARK: - SingletonRequestSetting
         
         public static var `default`: Settings {
             return Settings()
@@ -32,6 +32,8 @@ extension NetworkService {
         
         // MARK: - Project settings
         
+        public static let defaultRequestSettings = RequestSetting()
+        
         /// Implement and assign your logger, it'll be used by every instance as default.
         /// In order to change logger in particular NetworkService you may use `init(settings: NetworkService.Settings)`
         public static var defaultLogger: NetworkLogWriter?
@@ -39,6 +41,13 @@ extension NetworkService {
         /// Implement and assign your debug logger if needed.
         /// In order to change debug logger in particular NetworkService you may use `init(settings: NetworkService.Settings)`
         public static var defaultDebugLogger: NetworkLogWriter = DebugLogWriter()
+    }
+    
+    public final class RequestSetting {
+        
+        /// if set, will be merged with each endpoint's headers
+        public var additionalHeaders: [String: String]?
+        
     }
     
 }
