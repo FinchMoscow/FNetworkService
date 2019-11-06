@@ -59,12 +59,12 @@ public class NetworkService {
     
     private func parse<Response: Decodable>(response: DefaultDataResponse) -> APIResult<Response> {
         
-        guard let httpResponse = response.response else {
-            return APIResult.failure(APIError.noNetwork)
+        if let error = response.error, (error as NSError).code == Locals.timeoutStatusCode {
+            return APIResult.failure(.requestTimeout)
         }
         
-        guard httpResponse.statusCode != Locals.timeoutStatusCode else {
-            return APIResult.failure(.requestTimeout)
+        guard let httpResponse = response.response else {
+            return APIResult.failure(APIError.noNetwork)
         }
         
         guard (self.settings.validCodes ~= httpResponse.statusCode) else {
