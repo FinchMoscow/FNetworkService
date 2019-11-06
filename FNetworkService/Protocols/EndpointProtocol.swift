@@ -27,6 +27,8 @@ public protocol EndpointProtocol {
     var cacheKey: String? { get }
 }
 
+
+// MARK: - Default implementation
 public extension EndpointProtocol {
     
     var encoding: ParameterEncoding {
@@ -42,6 +44,21 @@ public extension EndpointProtocol {
     
     var cacheKey: String? {
         return nil
+    }
+    
+}
+
+
+public extension EndpointProtocol {
+    
+    var description: String {
+        
+        let domain = baseUrl?.absoluteString ?? "Domain missed!"
+        var endpointLog = "\(method.rawValue) Request: \(domain)\(path)\n"
+        endpointLog += "with parameters: \(parameters.stringValue)\n"
+        endpointLog += "headers: \(headers.stringValue)"
+        
+        return endpointLog
     }
     
 }

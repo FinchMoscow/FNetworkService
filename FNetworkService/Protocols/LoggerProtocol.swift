@@ -24,17 +24,8 @@ public extension NetworkLogWriter {
         
         guard shouldPerformLogging(isResultSuccess: result.isSuccess) else { return }
         
-        let method = endpoint.method
-        let domain = endpoint.baseUrl?.absoluteString ?? "Domain missed!"
-        let path = endpoint.path
-        
-        let parameters = endpoint.parameters.stringValue
-        let headers = endpoint.headers.stringValue
-        
         var endpointLog = "\(currentDate)\(endLine)"
-        endpointLog += "\(method.rawValue) Request: \(domain)\(path)\(endLine)"
-        endpointLog += "with parameters: \(parameters)\(endLine)"
-        endpointLog += "headers: \(headers)\(endLine)"
+        endpointLog += endpoint.description + endLine
         
         let resultText: String
         
