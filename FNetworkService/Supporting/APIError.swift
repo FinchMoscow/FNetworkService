@@ -12,8 +12,9 @@ public enum APIError: Error {
     
     case noBaseUrl
     case noNetwork
+    case requestTimeout(data: Data?)
     case serverError(error: Error?, response: HTTPURLResponse?, data: Data?)
-    case decodingError
+    case decodingError(data: Data)
     
     
     // MARK: - LocalizedError
@@ -24,6 +25,9 @@ public enum APIError: Error {
             
         case .noBaseUrl:
             return "No base URL provided."
+            
+        case .requestTimeout:
+            return "No response for a given time"
             
         case .noNetwork:
             return "No network connection."
@@ -58,8 +62,10 @@ extension APIError: Equatable {
             return true
         case (.noNetwork, .noNetwork):
             return true
-        case (.decodingError, .decodingError):
-            return true
+        case (.requestTimeout(let lhsData), .requestTimeout(let rhsData)):
+            return lhsData == rhsData
+        case (.decodingError(let lhsData), .decodingError(let rhsData)):
+            return lhsData == rhsData
         case (.serverError(_, let lhsResp, let lhsData), .serverError(_, let rhsResp, let rhsData)):
             return lhsResp?.statusCode == rhsResp?.statusCode && lhsData == rhsData
         default:

@@ -40,31 +40,18 @@ public class NetworkService {
     private let cacheStorage: Storage
     
     
-    // MARK: - Public Convenience methods
+    // MARK: - Private methods
     
-    public func request<Response>( endpoint: EndpointProtocol,
-                                   isCahingEnabled: Bool,
-                                   completion: @escaping (APIResult<Response>) -> Void) where Response: Codable
-    {
+    private func mergeHeaders(endpointHeaders: HTTPHeaders?) -> HTTPHeaders? {
         
-        switch isCahingEnabled {
-        case false: request(endpoint: endpoint, completion: completion)
-        case true: requestWithCache(endpoint: endpoint, completion: completion)
-        }
+        guard var endpointHeaders = endpointHeaders else { return settings.requestSettings.additionalHeaders }
+        guard let additionalHeaders = settings.requestSettings.additionalHeaders else { return endpointHeaders }
         
-    }
-    
-    
-    func requestWithHTTPResponse<Response>( endpoint: EndpointProtocol,
-                                            isCahingEnabled: Bool,
-                                            completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Codable
-    {
+        additionalHeaders.forEach({ key, value in
+            endpointHeaders.updateValue(value, forKey: key)
+        })
         
-        switch isCahingEnabled {
-        case false: requestWithHTTPResponse(endpoint: endpoint, completion: completion)
-        case true: cachebleRequestWithHTTPResponse(endpoint: endpoint, completion: completion)
-        }
-        
+        return endpointHeaders
     }
     
     
@@ -72,35 +59,38 @@ public class NetworkService {
     
     private func parse<Response: Decodable>(response: DefaultDataResponse) -> APIResult<Response> {
         
-        let result: APIResult<Response>
-        
         guard let httpResponse = response.response else {
-            result = APIResult.failure(APIError.noNetwork)
-            return result
+            return APIResult.failure(APIError.noNetwork)
+        }
+        
+        guard httpResponse.statusCode != Locals.timeoutStatusCode else {
+            return APIResult.failure(.requestTimeout(data: response.data))
         }
         
         guard (self.settings.validCodes ~= httpResponse.statusCode) else {
             let serverError = self.createServerError(from: response)
-            result = APIResult.failure(serverError)
-            return result
+            return APIResult.failure(serverError)
         }
         
         guard let data = response.data else {
             let serverError = self.createServerError(from: response)
-            result = APIResult.failure(serverError)
-            return result
+            return APIResult.failure(serverError)
         }
         
         do {
             let object = try self.decoder.decode(Response.self, from: data)
-            result = APIResult.success(object)
+            return APIResult.success(object)
         } catch {
-            result = APIResult.failure(.decodingError)
-            performDegubLogIfMatch(writeOptions: .all, .onError, text: String(data: data, encoding: .utf8) ?? "Reponse data is empty!")
+            return APIResult.failure(.decodingError(data: data))
         }
         
-        return result
+    }
+    
+    private func parse<Response: Decodable>(response: DefaultDataResponse) -> APIResult<ModelWithResponse<Response>> {
         
+        let baseResult: APIResult<Response> = parse(response: response)
+        guard let payload = baseResult.value else { return .failure(baseResult.error!)  }
+        return APIResult.success(ModelWithResponse<Response>(model: payload, response: response.response))
     }
     
     private func createServerError(from response: DefaultDataResponse) -> APIError {
@@ -132,12 +122,32 @@ public class NetworkService {
         
     }
     
-    private func performDegubLogIfMatch(writeOptions: LoggerWriteOptions..., text: String) {
+}
+
+
+// MARK: - Public Convenience methods
+public extension NetworkService {
+    
+    func request<Response>( endpoint: EndpointProtocol,
+                            isCahingEnabled: Bool,
+                            completion: @escaping (APIResult<Response>) -> Void) where Response: Codable
+    {
         
-        guard let logger = debugLogger, writeOptions.contains(logger.writeOptions) else { return }
+        switch isCahingEnabled {
+        case false: request(endpoint: endpoint, completion: completion)
+        case true: requestWithCache(endpoint: endpoint, completion: completion)
+        }
         
-        DispatchQueue.global(qos: .background).async {
-            logger.write(log: text)
+    }
+    
+    
+    func requestWithHTTPResponse<Response>( endpoint: EndpointProtocol,
+                                            isCahingEnabled: Bool,
+                                            completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Codable
+    {
+        switch isCahingEnabled {
+        case false: requestWithHTTPResponse(endpoint: endpoint, completion: completion)
+        case true: cachebleRequestWithHTTPResponse(endpoint: endpoint, completion: completion)
         }
         
     }
@@ -152,23 +162,26 @@ public extension NetworkService {
     func request<Response>(endpoint: EndpointProtocol, completion: @escaping (APIResult<Response>) -> Void) where Response: Decodable {
         
         guard let baseUrl = endpoint.baseUrl else {
-            completion(APIResult.failure(.noBaseUrl))
+            settings.completionQueue.async {
+                completion(APIResult.failure(.noBaseUrl))
+            }
             return
         }
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
+        let headers = mergeHeaders(endpointHeaders: endpoint.headers)
         
         alamofireManager.request(url,
                                  method: endpoint.method,
                                  parameters: endpoint.parameters,
                                  encoding: endpoint.encoding,
-                                 headers: endpoint.headers).response { [weak self] response in
+                                 headers: headers).response { [weak self] response in
                                     
                                     guard let self = self else { return }
                                     
                                     let result: APIResult<Response> = self.parse(response: response)
                                     
-                                    DispatchQueue.main.async {
+                                    self.settings.completionQueue.async {
                                         completion(result)
                                     }
                                     
@@ -189,11 +202,14 @@ public extension NetworkService {
     func requestWithCache<Response: Codable>(endpoint: EndpointProtocol, completion: @escaping (APIResult<Response>) -> Void) {
         
         guard let baseUrl = endpoint.baseUrl else {
-            completion(APIResult.failure(.noBaseUrl))
+            settings.completionQueue.async {
+                completion(APIResult.failure(.noBaseUrl))
+            }
             return
         }
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
+        let headers = mergeHeaders(endpointHeaders: endpoint.headers)
         
         let cachedResponse: Response? = retrieveCachedResponseIfExists(for: endpoint)
         let cachedResponseExists = (cachedResponse != nil)
@@ -204,13 +220,13 @@ public extension NetworkService {
                                  method: endpoint.method,
                                  parameters: endpoint.parameters,
                                  encoding: endpoint.encoding,
-                                 headers: endpoint.headers).response { [weak self] response in
+                                 headers: headers).response { [weak self] response in
                                     
                                     guard let self = self else { return }
                                     
                                     let result: APIResult<Response> = self.parse(response: response)
                                     
-                                    DispatchQueue.main.async {
+                                    self.settings.completionQueue.async {
                                         
                                         switch result {
                                             
@@ -237,7 +253,7 @@ public extension NetworkService {
                                     
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + settings.cacheRequestTimeout) {
+        settings.completionQueue.asyncAfter(deadline: .now() + settings.cacheRequestTimeout) {
             
             guard !completionCalled, let cachedResponse = cachedResponse else { return }
             
@@ -260,11 +276,14 @@ public extension NetworkService {
         completion: @escaping (APIResult<Response>) -> Void) where Response: Decodable {
         
         guard let baseUrl = endpoint.baseUrl else {
-            completion(APIResult.failure(.noBaseUrl))
+            settings.completionQueue.async {
+                completion(APIResult.failure(.noBaseUrl))
+            }
             return
         }
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
+        let headers = mergeHeaders(endpointHeaders: endpoint.headers)
         
         let progressUpdateBlock: (Progress) -> Void = { progress in
             progressHandler?(progress.fractionCompleted)
@@ -276,7 +295,7 @@ public extension NetworkService {
             
             let result: APIResult<Response> = self.parse(response: response)
             
-            DispatchQueue.main.async {
+            self.settings.completionQueue.async {
                 completion(result)
             }
             
@@ -286,7 +305,7 @@ public extension NetworkService {
         
         alamofireManager.upload(data, to: url,
                                 method: endpoint.method,
-                                headers: endpoint.headers)
+                                headers: headers)
             .uploadProgress(queue: DispatchQueue.main, closure: progressUpdateBlock)
             .response(completionHandler: responseHandler)
         
@@ -306,54 +325,30 @@ public extension NetworkService {
         completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Decodable {
         
         guard let baseUrl = endpoint.baseUrl else {
-            completion(APIResult.failure(.noBaseUrl))
+            settings.completionQueue.async {
+                completion(APIResult.failure(.noBaseUrl))
+            }
             return
         }
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
+        let headers = mergeHeaders(endpointHeaders: endpoint.headers)
         
         alamofireManager.request(url,
                                  method: endpoint.method,
                                  parameters: endpoint.parameters,
                                  encoding: endpoint.encoding,
-                                 headers: endpoint.headers).response { [weak self] response in
+                                 headers: headers).response { [weak self] response in
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: APIResult<ModelWithResponse<Response>>
+                                    let result: APIResult<ModelWithResponse<Response>> = self.parse(response: response)
                                     
-                                    defer {
-                                        DispatchQueue.main.async {
-                                            completion(result)
-                                        }
-                                        self.perfomLogWriting(endpoint: endpoint, result: result)
+                                    self.settings.completionQueue.async {
+                                        completion(result)
                                     }
                                     
-                                    guard let httpResponse = response.response else {
-                                        result = APIResult.failure(APIError.noNetwork)
-                                        return
-                                    }
-                                    
-                                    guard (self.settings.validCodes ~= httpResponse.statusCode) else {
-                                        let serverError = self.createServerError(from: response)
-                                        result = APIResult.failure(serverError)
-                                        return
-                                    }
-                                    
-                                    guard let data = response.data else {
-                                        let serverError = self.createServerError(from: response)
-                                        result = APIResult.failure(serverError)
-                                        return
-                                    }
-                                    
-                                    do {
-                                        let object = try self.decoder.decode(Response.self, from: data)
-                                        let model = ModelWithResponse(model: object,
-                                                                      response: response.response)
-                                        result = APIResult.success(model!)
-                                    } catch {
-                                        result = APIResult.failure(.decodingError)
-                                    }
+                                    self.perfomLogWriting(endpoint: endpoint, result: result)
                                     
         }
         
@@ -367,16 +362,17 @@ public extension NetworkService {
         completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Codable {
         
         guard let baseUrl = endpoint.baseUrl else {
-            completion(APIResult.failure(.noBaseUrl))
+            settings.completionQueue.async {
+                completion(APIResult.failure(.noBaseUrl))
+            }
             return
         }
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
+        let headers = mergeHeaders(endpointHeaders: endpoint.headers)
         
         let cachedObject: Response? = retrieveCachedResponseIfExists(for: endpoint)
-        let cachedModel = ModelWithResponse(model: cachedObject, response: nil)
-        
-        let cachedResponseExists = (cachedModel != nil)
+        let cachedResponseExists = (cachedObject != nil)
         
         var completionCalled = false // To avoid calling completion block twice (with network response and cached response)
         
@@ -384,11 +380,11 @@ public extension NetworkService {
                                  method: endpoint.method,
                                  parameters: endpoint.parameters,
                                  encoding: endpoint.encoding,
-                                 headers: endpoint.headers).response { [weak self] response in
+                                 headers: headers).response { [weak self] response in
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: APIResult<ModelWithResponse<Response>>
+                                    let result: APIResult<ModelWithResponse<Response>> = self.parse(response: response)
                                     
                                     defer {
                                         
@@ -418,40 +414,29 @@ public extension NetworkService {
                                         self.perfomLogWriting(endpoint: endpoint, result: result)
                                     }
                                     
-                                    guard let httpResponse = response.response else {
-                                        result = APIResult.failure(APIError.noNetwork)
-                                        return
-                                    }
-                                    
-                                    guard (self.settings.validCodes ~= httpResponse.statusCode) else {
-                                        let serverError = self.createServerError(from: response)
-                                        result = APIResult.failure(serverError)
-                                        return
-                                    }
-                                    
-                                    guard let data = response.data else {
-                                        let serverError = self.createServerError(from: response)
-                                        result = APIResult.failure(serverError)
-                                        return
-                                    }
-                                    
-                                    do {
-                                        let object = try self.decoder.decode(Response.self, from: data)
-                                        let model = ModelWithResponse(model: object, response: response.response)
-                                        result = APIResult.success(model!)
-                                    } catch {
-                                        result = APIResult.failure(.decodingError)
-                                    }
+                                    self.perfomLogWriting(endpoint: endpoint, result: result)
                                     
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + settings.cacheRequestTimeout) {
             
-            guard !completionCalled, let cachedResponse = cachedModel else { return }
+            guard !completionCalled, let cachedResponse = cachedObject else { return }
             
             completionCalled = true
-            completion(.success(cachedResponse))
+            completion(.success(ModelWithResponse<Response>(model: cachedResponse, response: nil)))
         }
+        
+    }
+    
+}
+
+
+// MARK: - Locals
+private extension NetworkService {
+    
+    struct Locals {
+        
+        static let timeoutStatusCode = -1001
         
     }
     

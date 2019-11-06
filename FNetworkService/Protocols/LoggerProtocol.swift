@@ -40,7 +40,7 @@ public extension NetworkLogWriter {
         
         switch result {
         case .failure(let error):
-            resultText = "ERROR: " + error.localizedDescription
+            resultText = "ERROR: " + errorDescription(error: error)
         case .success:
             resultText = "SUCCESS"
         }
@@ -52,6 +52,41 @@ public extension NetworkLogWriter {
     
     var dateLocale: Locale {
         return Locale(identifier: "en_US")
+    }
+    
+    
+    // MARK: - Private helpers
+    
+    private func errorDescription(error: APIError) -> String {
+        
+        func dataDescription(_ data: Data?) -> String {
+            let descriptionEntry = "Response body: "
+            guard let data = data else { return descriptionEntry + "Empty body!" }
+            return descriptionEntry + endLine + (String(data: data, encoding: .utf8) ?? "Failed to convert Data to String") + endLine
+        }
+        
+        switch error {
+        case .noBaseUrl:
+            return error.localizedDescription + endLine
+            
+        case .noNetwork:
+            return error.localizedDescription + endLine
+            
+        case .requestTimeout(let data):
+            var description = error.localizedDescription + endLine
+            description += dataDescription(data)
+            return description
+            
+        case .decodingError(let data):
+            return error.localizedDescription + endLine + dataDescription(data)
+            
+        case let .serverError(error, response, data):
+            var description = error?.localizedDescription ?? "(nil)" + endLine
+            description += "Status code: " + (response?.statusCode == nil ? "(nil)" : "\(response!.statusCode)")
+            description += dataDescription(data)
+            return description
+        }
+        
     }
     
     private var currentDate: String {

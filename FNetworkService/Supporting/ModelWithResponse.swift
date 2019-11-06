@@ -18,11 +18,9 @@ public struct ModelWithResponse<Model> {
     
     // MARK: - Init
     
-    init?(model: Model?, response: HTTPURLResponse?) {
-        
-        guard let model = model else { return nil }
-        
+    init(model: Model, response: HTTPURLResponse?) {
         self.model = model
         self.response = response
     }
+    
 }
