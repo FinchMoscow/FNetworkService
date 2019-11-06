@@ -14,13 +14,13 @@ public protocol NetworkLogWriter: AnyObject {
     var dateLocale: Locale { get }
     
     func write(log: String)
-    func write<T>(endpoint: EndpointProtocol, result: APIResult<T>)
+    func write<T>(endpoint: EndpointProtocol, result: APIResult<T>, data: Data?)
 }
 
 // MARK: - NetworkLogsWriter default implementation
 public extension NetworkLogWriter {
     
-    func write<T>(endpoint: EndpointProtocol, result: APIResult<T>) {
+    func write<T>(endpoint: EndpointProtocol, result: APIResult<T>, data: Data?) {
         
         guard shouldPerformLogging(isResultSuccess: result.isSuccess) else { return }
         
@@ -31,7 +31,7 @@ public extension NetworkLogWriter {
         
         switch result {
         case .failure(let error):
-            resultText = "ERROR: " + errorDescription(error: error)
+            resultText = "ERROR: " + errorDescription(error: error, data: data)
         case .success:
             resultText = "SUCCESS"
         }
@@ -48,7 +48,7 @@ public extension NetworkLogWriter {
     
     // MARK: - Private helpers
     
-    private func errorDescription(error: APIError) -> String {
+    private func errorDescription(error: APIError, data: Data?) -> String {
         
         func dataDescription(_ data: Data?) -> String {
             let descriptionEntry = "Response body: "
@@ -63,12 +63,12 @@ public extension NetworkLogWriter {
         case .noNetwork:
             return error.localizedDescription + endLine
             
-        case .requestTimeout(let data):
+        case .requestTimeout:
             var description = error.localizedDescription + endLine
             description += dataDescription(data)
             return description
             
-        case .decodingError(let data):
+        case .decodingError:
             return error.localizedDescription + endLine + dataDescription(data)
             
         case let .serverError(error, response, data):

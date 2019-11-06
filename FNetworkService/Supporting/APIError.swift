@@ -12,9 +12,9 @@ public enum APIError: Error {
     
     case noBaseUrl
     case noNetwork
-    case requestTimeout(data: Data?)
+    case requestTimeout
     case serverError(error: Error?, response: HTTPURLResponse?, data: Data?)
-    case decodingError(data: Data)
+    case decodingError
     
     
     // MARK: - LocalizedError
@@ -62,10 +62,10 @@ extension APIError: Equatable {
             return true
         case (.noNetwork, .noNetwork):
             return true
-        case (.requestTimeout(let lhsData), .requestTimeout(let rhsData)):
-            return lhsData == rhsData
-        case (.decodingError(let lhsData), .decodingError(let rhsData)):
-            return lhsData == rhsData
+        case (.requestTimeout, .requestTimeout):
+            return true
+        case (.decodingError, .decodingError):
+            return true
         case (.serverError(_, let lhsResp, let lhsData), .serverError(_, let rhsResp, let rhsData)):
             return lhsResp?.statusCode == rhsResp?.statusCode && lhsData == rhsData
         default:

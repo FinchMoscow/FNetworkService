@@ -64,7 +64,7 @@ public class NetworkService {
         }
         
         guard httpResponse.statusCode != Locals.timeoutStatusCode else {
-            return APIResult.failure(.requestTimeout(data: response.data))
+            return APIResult.failure(.requestTimeout)
         }
         
         guard (self.settings.validCodes ~= httpResponse.statusCode) else {
@@ -81,7 +81,7 @@ public class NetworkService {
             let object = try self.decoder.decode(Response.self, from: data)
             return APIResult.success(object)
         } catch {
-            return APIResult.failure(.decodingError(data: data))
+            return APIResult.failure(.decodingError)
         }
         
     }
@@ -113,11 +113,11 @@ public class NetworkService {
     
     // MARK: - Logger helpers
     
-    private func perfomLogWriting<T>(endpoint: EndpointProtocol, result: APIResult<T>) {
+    private func perfomLogWriting<T>(endpoint: EndpointProtocol, result: APIResult<T>, data: Data?) {
         
         DispatchQueue.global(qos: .background).async { [weak self] in
-            self?.networkLogger?.write(endpoint: endpoint, result: result)
-            self?.debugLogger?.write(endpoint: endpoint, result: result)
+            self?.networkLogger?.write(endpoint: endpoint, result: result, data: data)
+            self?.debugLogger?.write(endpoint: endpoint, result: result, data: data)
         }
         
     }
@@ -185,7 +185,7 @@ public extension NetworkService {
                                         completion(result)
                                     }
                                     
-                                    self.perfomLogWriting(endpoint: endpoint, result: result)
+                                    self.perfomLogWriting(endpoint: endpoint, result: result, data: response.data)
                                     
         }
         
@@ -249,7 +249,7 @@ public extension NetworkService {
                                         
                                     }
                                     
-                                    self.perfomLogWriting(endpoint: endpoint, result: result)
+                                    self.perfomLogWriting(endpoint: endpoint, result: result, data: response.data)
                                     
         }
         
@@ -299,7 +299,7 @@ public extension NetworkService {
                 completion(result)
             }
             
-            self.perfomLogWriting(endpoint: endpoint, result: result)
+            self.perfomLogWriting(endpoint: endpoint, result: result, data: response.data)
             
         }
         
@@ -348,7 +348,7 @@ public extension NetworkService {
                                         completion(result)
                                     }
                                     
-                                    self.perfomLogWriting(endpoint: endpoint, result: result)
+                                    self.perfomLogWriting(endpoint: endpoint, result: result, data: response.data)
                                     
         }
         
@@ -411,10 +411,10 @@ public extension NetworkService {
                                             
                                         }
                                         
-                                        self.perfomLogWriting(endpoint: endpoint, result: result)
+                                        self.perfomLogWriting(endpoint: endpoint, result: result, data: response.data)
                                     }
                                     
-                                    self.perfomLogWriting(endpoint: endpoint, result: result)
+                                    self.perfomLogWriting(endpoint: endpoint, result: result, data: response.data)
                                     
         }
         
