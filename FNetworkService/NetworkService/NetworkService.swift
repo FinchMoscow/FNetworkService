@@ -18,8 +18,6 @@ open class NetworkService: NetworkServiceProtocol {
     public init(settings: Settings = Settings.default) {
         
         self.settings = settings
-        self.networkLogger = settings.networkLogger
-        self.debugLogger = settings.debugLogger
         
         let sessionConfiguration = URLSessionConfiguration.default
         sessionConfiguration.timeoutIntervalForRequest = settings.requestTimeout
@@ -31,11 +29,8 @@ open class NetworkService: NetworkServiceProtocol {
     
     // MARK: - Properties
     
-    private(set) var settings: Settings
-    
-    
-    private let debugLogger: NetworkLogWriter?
-    private let networkLogger: NetworkLogWriter?
+    private(set) public var settings: Settings
+
     private let alamofireManager: SessionManager
     private let cacheStorage: Storage
     
@@ -138,8 +133,8 @@ open class NetworkService: NetworkServiceProtocol {
     private func perfomLogWriting<T>(endpoint: EndpointProtocol, result: APIResult<T>, data: Data?) {
         
         DispatchQueue.global(qos: .background).async { [weak self] in
-            self?.networkLogger?.write(endpoint: endpoint, result: result, data: data)
-            self?.debugLogger?.write(endpoint: endpoint, result: result, data: data)
+            self?.settings.networkLogger?.write(endpoint: endpoint, result: result, data: data)
+            self?.settings.debugLogger?.write(endpoint: endpoint, result: result, data: data)
         }
         
     }
