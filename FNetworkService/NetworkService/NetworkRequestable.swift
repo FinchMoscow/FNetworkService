@@ -22,7 +22,7 @@ public protocol NetworkRequestable {
     
     /// APIXResult<Decodable> = Swift.Result<ModelWithResponse<Decodable>, APIError>
     func request<Response: Decodable>(endpoint: EndpointProtocol, completion: @escaping (APIXResult<Response>) -> Void)
-    /// APIXResult<Codable> = Swift.Result<ModelWithResponse<Codable>, APIError>, ; Note you shoud provide cacheKey within EndpointProtocol
+    /// APIXResult<Codable> = Swift.Result<ModelWithResponse<Codable>, APIError>; Note you shoud provide cacheKey within EndpointProtocol
     func requestWithCache<Response: Codable>(endpoint: EndpointProtocol, completion: @escaping (APIXResult<Response>) -> Void)
     
     
@@ -37,23 +37,27 @@ public protocol NetworkRequestable {
 extension NetworkRequestable {
     
     /// APIResult = Swift.Result<Codable, APIError>,
-    func request<Response: Codable>(endpoint: EndpointProtocol, isCahingEnabled: Bool, completion: @escaping (APIResult<Response>) -> Void) {
+    public func request<Response: Codable>(endpoint: EndpointProtocol,
+                                           isCahingEnabled: Bool,
+                                           completion: @escaping (APIResult<Response>) -> Void) {
         isCahingEnabled
             ? self.request(endpoint: endpoint, completion: completion)
             : self.requestWithCache(endpoint: endpoint, completion: completion)
     }
     
     /// APIXResult<Codable> = Swift.Result<ModelWithResponse<Codable>, APIError>
-    func request<Response: Codable>(endpoint: EndpointProtocol, isCahingEnabled: Bool, completion: @escaping (APIXResult<Response>) -> Void) {
+    public func request<Response: Codable>(endpoint: EndpointProtocol,
+                                           isCahingEnabled: Bool,
+                                           completion: @escaping (APIXResult<Response>) -> Void) {
         isCahingEnabled
             ? self.request(endpoint: endpoint, completion: completion)
             : self.requestWithCache(endpoint: endpoint, completion: completion)
     }
     
     /// APIResult = Swift.Result<Decodable, APIError>
-    func uploadRequest<Response: Decodable>(endpoint: EndpointProtocol,
-                                            data: Data, progressHandler: ((Double) -> Void)? = nil,
-                                            completion: @escaping (APIResult<Response>) -> Void) {
+    public func uploadRequest<Response: Decodable>(endpoint: EndpointProtocol,
+                                                   data: Data, progressHandler: ((Double) -> Void)? = nil,
+                                                   completion: @escaping (APIResult<Response>) -> Void) {
         
         self.uploadRequest(endpoint: endpoint, data: data, progressHandler: progressHandler, completion: completion)
     }
