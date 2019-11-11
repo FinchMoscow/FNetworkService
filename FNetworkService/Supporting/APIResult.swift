@@ -9,6 +9,7 @@
 import Foundation
 
 public typealias APIResult<Model> = Swift.Result<Model, APIError>
+public typealias APIXResult<Model> = Swift.Result<ModelWithResponse<Model>, APIError>
 
 extension APIResult {
     

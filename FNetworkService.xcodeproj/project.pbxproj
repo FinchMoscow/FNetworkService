@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		44FA6B0E2379BD4A0063E686 /* ResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FA6B0D2379BD4A0063E686 /* ResponseParser.swift */; };
+		44FA6B102379D1540063E686 /* NetworkRequestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FA6B0F2379D1540063E686 /* NetworkRequestable.swift */; };
 		5C53ADA4228D6D7400470F9C /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C53ADA3228D6D7300470F9C /* Settings.swift */; };
 		5C53ADA6228D6FA400470F9C /* DebugLogsWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C53ADA5228D6FA400470F9C /* DebugLogsWriter.swift */; };
 		5C8BAF032372DFA3006C60B2 /* RequestSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8BAF022372DFA3006C60B2 /* RequestSettings.swift */; };
@@ -28,6 +30,8 @@
 /* Begin PBXFileReference section */
 		22D709BFDBD310DEF5327073 /* libPods-FNetworkService.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FNetworkService.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		314045FBA4F87A918E41BCB0 /* Pods-FNetworkService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FNetworkService.debug.xcconfig"; path = "Target Support Files/Pods-FNetworkService/Pods-FNetworkService.debug.xcconfig"; sourceTree = "<group>"; };
+		44FA6B0D2379BD4A0063E686 /* ResponseParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseParser.swift; sourceTree = "<group>"; };
+		44FA6B0F2379D1540063E686 /* NetworkRequestable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequestable.swift; sourceTree = "<group>"; };
 		5C53ADA3228D6D7300470F9C /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		5C53ADA5228D6FA400470F9C /* DebugLogsWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogsWriter.swift; sourceTree = "<group>"; };
 		5C8BAF022372DFA3006C60B2 /* RequestSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestSettings.swift; sourceTree = "<group>"; };
@@ -129,6 +133,8 @@
 				5CDF4E132270AF26006C1764 /* NetworkService.swift */,
 				5C53ADA3228D6D7300470F9C /* Settings.swift */,
 				5C8BAF022372DFA3006C60B2 /* RequestSettings.swift */,
+				44FA6B0D2379BD4A0063E686 /* ResponseParser.swift */,
+				44FA6B0F2379D1540063E686 /* NetworkRequestable.swift */,
 			);
 			path = NetworkService;
 			sourceTree = "<group>";
@@ -264,7 +270,9 @@
 				5CDF4E0A22709982006C1764 /* APIError.swift in Sources */,
 				5CDF4DFA22709979006C1764 /* GenericStorage.swift in Sources */,
 				5CDF4E0922709982006C1764 /* JSONEncoding.swift in Sources */,
+				44FA6B102379D1540063E686 /* NetworkRequestable.swift in Sources */,
 				5CDF4E0D22709982006C1764 /* CommonHTTPHeader.swift in Sources */,
+				44FA6B0E2379BD4A0063E686 /* ResponseParser.swift in Sources */,
 				5CDF4E142270AF27006C1764 /* NetworkService.swift in Sources */,
 				5CDF4E0F22709982006C1764 /* LoggerWriteOptions.swift in Sources */,
 				5C53ADA4228D6D7400470F9C /* Settings.swift in Sources */,

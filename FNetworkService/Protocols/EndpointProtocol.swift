@@ -60,5 +60,5 @@ public extension EndpointProtocol {
         
         return endpointLog
     }
-    
+        
 }

@@ -21,6 +21,12 @@ extension NetworkService {
         public var networkLogger: NetworkLogWriter? = Settings.defaultLogger
         public var debugLogger: NetworkLogWriter? = Settings.defaultDebugLogger
         
+        public lazy var decoder: JSONDecoder = {
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = self.dateDecodingStrategy
+            return decoder
+        }()
+        
         
         // MARK: - Singleton
         

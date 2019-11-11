@@ -8,8 +8,10 @@
 import Foundation
 import Alamofire
 
+public typealias NetworkServiceProtocol = NetworkRequestable & ResponseParser
+
 // MARK: - Network Service Implementation
-public class NetworkService {
+open class NetworkService: NetworkServiceProtocol {
     
     // MARK: - Init
     
@@ -18,9 +20,6 @@ public class NetworkService {
         self.settings = settings
         self.networkLogger = settings.networkLogger
         self.debugLogger = settings.debugLogger
-        
-        self.decoder = JSONDecoder()
-        self.decoder.dateDecodingStrategy = settings.dateDecodingStrategy
         
         let sessionConfiguration = URLSessionConfiguration.default
         sessionConfiguration.timeoutIntervalForRequest = settings.requestTimeout
@@ -32,10 +31,11 @@ public class NetworkService {
     
     // MARK: - Properties
     
+    private(set) var settings: Settings
+    
+    
     private let debugLogger: NetworkLogWriter?
     private let networkLogger: NetworkLogWriter?
-    private let settings: Settings
-    private let decoder: JSONDecoder
     private let alamofireManager: SessionManager
     private let cacheStorage: Storage
     
@@ -55,9 +55,44 @@ public class NetworkService {
     }
     
     
-    // MARK: - Requests helpers
+    // MARK: - ResponseParser
     
-    private func parse<Response: Decodable>(response: DefaultDataResponse) -> APIResult<Response> {
+    open func parse(response: DefaultDataResponse, forEndpoint endpoint: EndpointProtocol) -> APIResult<Data> {
+        return rawParse(response: response, settings: settings)
+    }
+    
+    open func parse<Response: Decodable>(response: DefaultDataResponse, forEndpoint endpoint: EndpointProtocol) -> APIResult<Response> {
+        
+        let dataResult = rawParse(response: response, settings: settings)
+        guard let data = dataResult.value else { return .failure(dataResult.error!) }
+        
+        do {
+            let object = try self.settings.decoder.decode(Response.self, from: data)
+            return APIResult.success(object)
+        } catch {
+            return APIResult.failure(.decodingError)
+        }
+        
+    }
+    
+    open func parse<Response: Decodable>(response: DefaultDataResponse, forEndpoint endpoint: EndpointProtocol) -> APIXResult<Response> {
+        
+        let dataResult = rawParse(response: response, settings: settings)
+        guard let data = dataResult.value else { return .failure(dataResult.error!) }
+        
+        do {
+            let object = try self.settings.decoder.decode(Response.self, from: data)
+            return APIXResult.success(ModelWithResponse<Response>(model: object, response: response.response))
+        } catch {
+            return APIResult.failure(.decodingError)
+        }
+        
+    }
+    
+
+    // MARK: - ResponseParser helpers
+    
+    private func rawParse(response: DefaultDataResponse, settings: NetworkService.Settings) -> APIResult<Data> {
         
         if let error = response.error, (error as NSError).code == Locals.timeoutStatusCode {
             return APIResult.failure(.requestTimeout)
@@ -67,7 +102,7 @@ public class NetworkService {
             return APIResult.failure(APIError.noNetwork)
         }
         
-        guard (self.settings.validCodes ~= httpResponse.statusCode) else {
+        guard (settings.validCodes ~= httpResponse.statusCode) else {
             let serverError = self.createServerError(from: response)
             return APIResult.failure(serverError)
         }
@@ -77,23 +112,10 @@ public class NetworkService {
             return APIResult.failure(serverError)
         }
         
-        do {
-            let object = try self.decoder.decode(Response.self, from: data)
-            return APIResult.success(object)
-        } catch {
-            return APIResult.failure(.decodingError)
-        }
-        
+        return .success(data)
     }
     
-    private func parse<Response: Decodable>(response: DefaultDataResponse) -> APIResult<ModelWithResponse<Response>> {
-        
-        let baseResult: APIResult<Response> = parse(response: response)
-        guard let payload = baseResult.value else { return .failure(baseResult.error!)  }
-        return APIResult.success(ModelWithResponse<Response>(model: payload, response: response.response))
-    }
-    
-    private func createServerError(from response: DefaultDataResponse) -> APIError {
+    func createServerError(from response: DefaultDataResponse) -> APIError {
         return APIError.serverError(error: response.error, response: response.response, data: response.data)
     }
     
@@ -122,44 +144,11 @@ public class NetworkService {
         
     }
     
-}
-
-
-// MARK: - Public Convenience methods
-public extension NetworkService {
     
-    func request<Response>( endpoint: EndpointProtocol,
-                            isCahingEnabled: Bool,
-                            completion: @escaping (APIResult<Response>) -> Void) where Response: Codable
-    {
-        
-        switch isCahingEnabled {
-        case false: request(endpoint: endpoint, completion: completion)
-        case true: requestWithCache(endpoint: endpoint, completion: completion)
-        }
-        
-    }
+    // MARK: - NetworkRequestable
     
-    
-    func requestWithHTTPResponse<Response>( endpoint: EndpointProtocol,
-                                            isCahingEnabled: Bool,
-                                            completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Codable
-    {
-        switch isCahingEnabled {
-        case false: requestWithHTTPResponse(endpoint: endpoint, completion: completion)
-        case true: cachebleRequestWithHTTPResponse(endpoint: endpoint, completion: completion)
-        }
-        
-    }
-    
-}
-
-
-// MARK: - Simple HTTP request without cache
-public extension NetworkService {
-    
-    /// Simple HTTP request without cache
-    func request<Response>(endpoint: EndpointProtocol, completion: @escaping (APIResult<Response>) -> Void) where Response: Decodable {
+    // MARK: - Simple HTTP request with raw Data Result without cache
+    open func request(endpoint: EndpointProtocol, completion: @escaping(APIResult<Data>) -> Void) {
         
         guard let baseUrl = endpoint.baseUrl else {
             settings.completionQueue.async {
@@ -179,7 +168,7 @@ public extension NetworkService {
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: APIResult<Response> = self.parse(response: response)
+                                    let result: APIResult<Data> = self.parse(response: response, forEndpoint: endpoint)
                                     
                                     self.settings.completionQueue.async {
                                         completion(result)
@@ -191,15 +180,43 @@ public extension NetworkService {
         
     }
     
-}
-
-
-// MARK: - Simple HTTP request with cache // TODO refactoring
-public extension NetworkService {
     
-    /// Simple HTTP request with cache.
-    /// Note you shoud provide cacheKey within EndpointProtocol
-    func requestWithCache<Response: Codable>(endpoint: EndpointProtocol, completion: @escaping (APIResult<Response>) -> Void) {
+    // MARK: - Simple HTTP request without cache
+    open func request<Response: Decodable>(endpoint: EndpointProtocol, completion: @escaping (APIResult<Response>) -> Void) {
+        
+        guard let baseUrl = endpoint.baseUrl else {
+            settings.completionQueue.async {
+                completion(APIResult.failure(.noBaseUrl))
+            }
+            return
+        }
+        
+        let url = baseUrl.appendingPathComponent(endpoint.path)
+        let headers = mergeHeaders(endpointHeaders: endpoint.headers)
+        
+        alamofireManager.request(url,
+                                 method: endpoint.method,
+                                 parameters: endpoint.parameters,
+                                 encoding: endpoint.encoding,
+                                 headers: headers).response { [weak self] response in
+                                    
+                                    guard let self = self else { return }
+                                    
+                                    let result: APIResult<Response> = self.parse(response: response, forEndpoint: endpoint)
+                                    
+                                    self.settings.completionQueue.async {
+                                        completion(result)
+                                    }
+                                    
+                                    self.perfomLogWriting(endpoint: endpoint, result: result, data: response.data)
+                                    
+        }
+        
+    }
+    
+    
+    // MARK: - Simple HTTP request with cache
+    open func requestWithCache<Response: Codable>(endpoint: EndpointProtocol, completion: @escaping (APIResult<Response>) -> Void) {
         
         guard let baseUrl = endpoint.baseUrl else {
             settings.completionQueue.async {
@@ -224,7 +241,7 @@ public extension NetworkService {
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: APIResult<Response> = self.parse(response: response)
+                                    let result: APIResult<Response> = self.parse(response: response, forEndpoint: endpoint)
                                     
                                     self.settings.completionQueue.async {
                                         
@@ -263,13 +280,9 @@ public extension NetworkService {
         
     }
     
-}
-
-
-// MARK: - Upload Request
-public extension NetworkService {
     
-    func uploadRequest<Response>(
+    // MARK: - Upload Request
+    open func uploadRequest<Response>(
         endpoint: EndpointProtocol,
         data: Data,
         progressHandler: ((Double) -> Void)? = nil,
@@ -293,7 +306,7 @@ public extension NetworkService {
             
             guard let self = self else { return }
             
-            let result: APIResult<Response> = self.parse(response: response)
+            let result: APIResult<Response> = self.parse(response: response, forEndpoint: endpoint)
             
             self.settings.completionQueue.async {
                 completion(result)
@@ -311,22 +324,14 @@ public extension NetworkService {
         
     }
     
-}
-
-
-// MARK: - Request with boxed Codable and HTTPURLResponse
-public extension NetworkService {
     
+    // MARK: - Request with boxed Response into `ModelWithResponse`, no cache
     
-    // MARK: - Simple request without cache
-    
-    func requestWithHTTPResponse<Response>(
-        endpoint: EndpointProtocol,
-        completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Decodable {
+    open func request<Response: Decodable>(endpoint: EndpointProtocol, completion: @escaping (APIXResult<Response>) -> Void) {
         
         guard let baseUrl = endpoint.baseUrl else {
             settings.completionQueue.async {
-                completion(APIResult.failure(.noBaseUrl))
+                completion(APIXResult.failure(.noBaseUrl))
             }
             return
         }
@@ -342,7 +347,7 @@ public extension NetworkService {
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: APIResult<ModelWithResponse<Response>> = self.parse(response: response)
+                                    let result: APIXResult<Response> = self.parse(response: response, forEndpoint: endpoint)
                                     
                                     self.settings.completionQueue.async {
                                         completion(result)
@@ -355,11 +360,9 @@ public extension NetworkService {
     }
     
     
-    // MARK: - Request with result caching
+    // MARK: - Request with boxed Response into `ModelWithResponse`, with cache
     
-    func cachebleRequestWithHTTPResponse<Response>(
-        endpoint: EndpointProtocol,
-        completion: @escaping (APIResult<ModelWithResponse<Response>>) -> Void) where Response: Codable {
+    open func requestWithCache<Response: Codable>(endpoint: EndpointProtocol, completion: @escaping (APIXResult<Response>) -> Void) {
         
         guard let baseUrl = endpoint.baseUrl else {
             settings.completionQueue.async {
@@ -384,7 +387,7 @@ public extension NetworkService {
                                     
                                     guard let self = self else { return }
                                     
-                                    let result: APIResult<ModelWithResponse<Response>> = self.parse(response: response)
+                                    let result: APIXResult<Response> = self.parse(response: response, forEndpoint: endpoint)
                                     
                                     defer {
                                         
@@ -425,6 +428,7 @@ public extension NetworkService {
             completionCalled = true
             completion(.success(ModelWithResponse<Response>(model: cachedResponse, response: nil)))
         }
+        
         
     }
     
