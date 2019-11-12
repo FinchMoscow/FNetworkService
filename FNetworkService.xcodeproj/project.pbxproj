@@ -8,41 +8,43 @@
 
 /* Begin PBXBuildFile section */
 		2474118968E9E44C81C6274F /* libPods-FNetworkService.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D4386EB8E85EFFF3F3E764E5 /* libPods-FNetworkService.a */; };
-		5C53ADA4228D6D7400470F9C /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C53ADA3228D6D7300470F9C /* Settings.swift */; };
-		5C53ADA6228D6FA400470F9C /* DebugLogsWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C53ADA5228D6FA400470F9C /* DebugLogsWriter.swift */; };
 		5CDF4DF22270954A006C1764 /* FNetworkService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5CDF4DF02270954A006C1764 /* FNetworkService.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5CDF4DFA22709979006C1764 /* GenericStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DF922709979006C1764 /* GenericStorage.swift */; };
-		5CDF4E0822709982006C1764 /* Optional+stringValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DFC22709982006C1764 /* Optional+stringValue.swift */; };
-		5CDF4E0922709982006C1764 /* JSONEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DFD22709982006C1764 /* JSONEncoding.swift */; };
-		5CDF4E0A22709982006C1764 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DFE22709982006C1764 /* APIError.swift */; };
-		5CDF4E0B22709982006C1764 /* APIResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4DFF22709982006C1764 /* APIResult.swift */; };
-		5CDF4E0D22709982006C1764 /* CommonHTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0122709982006C1764 /* CommonHTTPHeader.swift */; };
-		5CDF4E0F22709982006C1764 /* LoggerWriteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0322709982006C1764 /* LoggerWriteOptions.swift */; };
-		5CDF4E1022709982006C1764 /* EndpointProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0522709982006C1764 /* EndpointProtocol.swift */; };
-		5CDF4E1222709982006C1764 /* LoggerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0722709982006C1764 /* LoggerProtocol.swift */; };
-		5CDF4E142270AF27006C1764 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E132270AF26006C1764 /* NetworkService.swift */; };
-		8E925EA222E9E4F500ADFFCD /* ModelWithResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E925EA122E9E4F500ADFFCD /* ModelWithResponse.swift */; };
+		8EFE26DD237A368E00FD2802 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26DC237A368E00FD2802 /* Package.swift */; };
+		8EFE26F1237A36A600FD2802 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26E1237A36A600FD2802 /* NetworkService.swift */; };
+		8EFE26F2237A36A600FD2802 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26E2237A36A600FD2802 /* Settings.swift */; };
+		8EFE26F3237A36A600FD2802 /* Optional+stringValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26E4237A36A600FD2802 /* Optional+stringValue.swift */; };
+		8EFE26F4237A36A600FD2802 /* JSONEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26E5237A36A600FD2802 /* JSONEncoding.swift */; };
+		8EFE26F5237A36A600FD2802 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26E6237A36A600FD2802 /* APIError.swift */; };
+		8EFE26F6237A36A600FD2802 /* APIResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26E7237A36A600FD2802 /* APIResult.swift */; };
+		8EFE26F7237A36A600FD2802 /* DebugLogsWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26E8237A36A600FD2802 /* DebugLogsWriter.swift */; };
+		8EFE26F8237A36A600FD2802 /* ModelWithResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26E9237A36A600FD2802 /* ModelWithResponse.swift */; };
+		8EFE26F9237A36A600FD2802 /* CommonHTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26EA237A36A600FD2802 /* CommonHTTPHeader.swift */; };
+		8EFE26FA237A36A600FD2802 /* LoggerWriteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26EB237A36A600FD2802 /* LoggerWriteOptions.swift */; };
+		8EFE26FB237A36A600FD2802 /* GenericStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26ED237A36A600FD2802 /* GenericStorage.swift */; };
+		8EFE26FC237A36A600FD2802 /* EndpointProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26EF237A36A600FD2802 /* EndpointProtocol.swift */; };
+		8EFE26FD237A36A600FD2802 /* LoggerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EFE26F0237A36A600FD2802 /* LoggerProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		003BE1DD5C3182BEC54619FA /* Pods-FNetworkService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FNetworkService.debug.xcconfig"; path = "Target Support Files/Pods-FNetworkService/Pods-FNetworkService.debug.xcconfig"; sourceTree = "<group>"; };
 		05B31105F6D1CE3F13A0AB06 /* Pods-FNetworkService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FNetworkService.release.xcconfig"; path = "Target Support Files/Pods-FNetworkService/Pods-FNetworkService.release.xcconfig"; sourceTree = "<group>"; };
-		5C53ADA3228D6D7300470F9C /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
-		5C53ADA5228D6FA400470F9C /* DebugLogsWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogsWriter.swift; sourceTree = "<group>"; };
 		5CDF4DED2270954A006C1764 /* FNetworkService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FNetworkService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CDF4DF02270954A006C1764 /* FNetworkService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FNetworkService.h; sourceTree = "<group>"; };
 		5CDF4DF12270954A006C1764 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5CDF4DF922709979006C1764 /* GenericStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericStorage.swift; sourceTree = "<group>"; };
-		5CDF4DFC22709982006C1764 /* Optional+stringValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Optional+stringValue.swift"; sourceTree = "<group>"; };
-		5CDF4DFD22709982006C1764 /* JSONEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONEncoding.swift; sourceTree = "<group>"; };
-		5CDF4DFE22709982006C1764 /* APIError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
-		5CDF4DFF22709982006C1764 /* APIResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIResult.swift; sourceTree = "<group>"; };
-		5CDF4E0122709982006C1764 /* CommonHTTPHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonHTTPHeader.swift; sourceTree = "<group>"; };
-		5CDF4E0322709982006C1764 /* LoggerWriteOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerWriteOptions.swift; sourceTree = "<group>"; };
-		5CDF4E0522709982006C1764 /* EndpointProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointProtocol.swift; sourceTree = "<group>"; };
-		5CDF4E0722709982006C1764 /* LoggerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerProtocol.swift; sourceTree = "<group>"; };
-		5CDF4E132270AF26006C1764 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
-		8E925EA122E9E4F500ADFFCD /* ModelWithResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWithResponse.swift; sourceTree = "<group>"; };
+		8EFE26DC237A368E00FD2802 /* Package.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		8EFE26E1237A36A600FD2802 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		8EFE26E2237A36A600FD2802 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		8EFE26E4237A36A600FD2802 /* Optional+stringValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Optional+stringValue.swift"; sourceTree = "<group>"; };
+		8EFE26E5237A36A600FD2802 /* JSONEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONEncoding.swift; sourceTree = "<group>"; };
+		8EFE26E6237A36A600FD2802 /* APIError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		8EFE26E7237A36A600FD2802 /* APIResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIResult.swift; sourceTree = "<group>"; };
+		8EFE26E8237A36A600FD2802 /* DebugLogsWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugLogsWriter.swift; sourceTree = "<group>"; };
+		8EFE26E9237A36A600FD2802 /* ModelWithResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelWithResponse.swift; sourceTree = "<group>"; };
+		8EFE26EA237A36A600FD2802 /* CommonHTTPHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonHTTPHeader.swift; sourceTree = "<group>"; };
+		8EFE26EB237A36A600FD2802 /* LoggerWriteOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerWriteOptions.swift; sourceTree = "<group>"; };
+		8EFE26ED237A36A600FD2802 /* GenericStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericStorage.swift; sourceTree = "<group>"; };
+		8EFE26EF237A36A600FD2802 /* EndpointProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointProtocol.swift; sourceTree = "<group>"; };
+		8EFE26F0237A36A600FD2802 /* LoggerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerProtocol.swift; sourceTree = "<group>"; };
 		D4386EB8E85EFFF3F3E764E5 /* libPods-FNetworkService.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FNetworkService.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -69,6 +71,8 @@
 		5CDF4DE32270954A006C1764 = {
 			isa = PBXGroup;
 			children = (
+				8EFE26DC237A368E00FD2802 /* Package.swift */,
+				8EFE26DE237A36A600FD2802 /* Sources */,
 				5CDF4DEF2270954A006C1764 /* FNetworkService */,
 				5CDF4DEE2270954A006C1764 /* Products */,
 				75C9215F3D3945930CC7E7D5 /* Pods */,
@@ -87,55 +91,10 @@
 		5CDF4DEF2270954A006C1764 /* FNetworkService */ = {
 			isa = PBXGroup;
 			children = (
-				5CDF4E152270B19C006C1764 /* NetworkService */,
-				5CDF4E0422709982006C1764 /* Protocols */,
-				5CDF4DFB22709982006C1764 /* Supporting */,
-				5CDF4DF822709979006C1764 /* Caching */,
 				5CDF4DF02270954A006C1764 /* FNetworkService.h */,
 				5CDF4DF12270954A006C1764 /* Info.plist */,
 			);
 			path = FNetworkService;
-			sourceTree = "<group>";
-		};
-		5CDF4DF822709979006C1764 /* Caching */ = {
-			isa = PBXGroup;
-			children = (
-				5CDF4DF922709979006C1764 /* GenericStorage.swift */,
-			);
-			path = Caching;
-			sourceTree = "<group>";
-		};
-		5CDF4DFB22709982006C1764 /* Supporting */ = {
-			isa = PBXGroup;
-			children = (
-				5CDF4DFC22709982006C1764 /* Optional+stringValue.swift */,
-				5CDF4DFD22709982006C1764 /* JSONEncoding.swift */,
-				5CDF4DFE22709982006C1764 /* APIError.swift */,
-				5CDF4DFF22709982006C1764 /* APIResult.swift */,
-				8E925EA122E9E4F500ADFFCD /* ModelWithResponse.swift */,
-				5CDF4E0122709982006C1764 /* CommonHTTPHeader.swift */,
-				5CDF4E0322709982006C1764 /* LoggerWriteOptions.swift */,
-				5C53ADA5228D6FA400470F9C /* DebugLogsWriter.swift */,
-			);
-			path = Supporting;
-			sourceTree = "<group>";
-		};
-		5CDF4E0422709982006C1764 /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				5CDF4E0522709982006C1764 /* EndpointProtocol.swift */,
-				5CDF4E0722709982006C1764 /* LoggerProtocol.swift */,
-			);
-			path = Protocols;
-			sourceTree = "<group>";
-		};
-		5CDF4E152270B19C006C1764 /* NetworkService */ = {
-			isa = PBXGroup;
-			children = (
-				5CDF4E132270AF26006C1764 /* NetworkService.swift */,
-				5C53ADA3228D6D7300470F9C /* Settings.swift */,
-			);
-			path = NetworkService;
 			sourceTree = "<group>";
 		};
 		75C9215F3D3945930CC7E7D5 /* Pods */ = {
@@ -145,6 +104,67 @@
 				05B31105F6D1CE3F13A0AB06 /* Pods-FNetworkService.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		8EFE26DE237A36A600FD2802 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				8EFE26DF237A36A600FD2802 /* FNetworkService */,
+			);
+			name = Sources;
+			path = ../../../../Desktop/Packages/FNetworkService/Sources;
+			sourceTree = "<group>";
+		};
+		8EFE26DF237A36A600FD2802 /* FNetworkService */ = {
+			isa = PBXGroup;
+			children = (
+				8EFE26E0237A36A600FD2802 /* NetworkService */,
+				8EFE26E3237A36A600FD2802 /* Supporting */,
+				8EFE26EC237A36A600FD2802 /* Caching */,
+				8EFE26EE237A36A600FD2802 /* Protocols */,
+			);
+			path = FNetworkService;
+			sourceTree = "<group>";
+		};
+		8EFE26E0237A36A600FD2802 /* NetworkService */ = {
+			isa = PBXGroup;
+			children = (
+				8EFE26E1237A36A600FD2802 /* NetworkService.swift */,
+				8EFE26E2237A36A600FD2802 /* Settings.swift */,
+			);
+			path = NetworkService;
+			sourceTree = "<group>";
+		};
+		8EFE26E3237A36A600FD2802 /* Supporting */ = {
+			isa = PBXGroup;
+			children = (
+				8EFE26E4237A36A600FD2802 /* Optional+stringValue.swift */,
+				8EFE26E5237A36A600FD2802 /* JSONEncoding.swift */,
+				8EFE26E6237A36A600FD2802 /* APIError.swift */,
+				8EFE26E7237A36A600FD2802 /* APIResult.swift */,
+				8EFE26E8237A36A600FD2802 /* DebugLogsWriter.swift */,
+				8EFE26E9237A36A600FD2802 /* ModelWithResponse.swift */,
+				8EFE26EA237A36A600FD2802 /* CommonHTTPHeader.swift */,
+				8EFE26EB237A36A600FD2802 /* LoggerWriteOptions.swift */,
+			);
+			path = Supporting;
+			sourceTree = "<group>";
+		};
+		8EFE26EC237A36A600FD2802 /* Caching */ = {
+			isa = PBXGroup;
+			children = (
+				8EFE26ED237A36A600FD2802 /* GenericStorage.swift */,
+			);
+			path = Caching;
+			sourceTree = "<group>";
+		};
+		8EFE26EE237A36A600FD2802 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				8EFE26EF237A36A600FD2802 /* EndpointProtocol.swift */,
+				8EFE26F0237A36A600FD2802 /* LoggerProtocol.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,19 +271,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C53ADA6228D6FA400470F9C /* DebugLogsWriter.swift in Sources */,
-				5CDF4E1222709982006C1764 /* LoggerProtocol.swift in Sources */,
-				5CDF4E0822709982006C1764 /* Optional+stringValue.swift in Sources */,
-				8E925EA222E9E4F500ADFFCD /* ModelWithResponse.swift in Sources */,
-				5CDF4E0B22709982006C1764 /* APIResult.swift in Sources */,
-				5CDF4E1022709982006C1764 /* EndpointProtocol.swift in Sources */,
-				5CDF4E0A22709982006C1764 /* APIError.swift in Sources */,
-				5CDF4DFA22709979006C1764 /* GenericStorage.swift in Sources */,
-				5CDF4E0922709982006C1764 /* JSONEncoding.swift in Sources */,
-				5CDF4E0D22709982006C1764 /* CommonHTTPHeader.swift in Sources */,
-				5CDF4E142270AF27006C1764 /* NetworkService.swift in Sources */,
-				5CDF4E0F22709982006C1764 /* LoggerWriteOptions.swift in Sources */,
-				5C53ADA4228D6D7400470F9C /* Settings.swift in Sources */,
+				8EFE26FC237A36A600FD2802 /* EndpointProtocol.swift in Sources */,
+				8EFE26FA237A36A600FD2802 /* LoggerWriteOptions.swift in Sources */,
+				8EFE26FD237A36A600FD2802 /* LoggerProtocol.swift in Sources */,
+				8EFE26F5237A36A600FD2802 /* APIError.swift in Sources */,
+				8EFE26F3237A36A600FD2802 /* Optional+stringValue.swift in Sources */,
+				8EFE26F9237A36A600FD2802 /* CommonHTTPHeader.swift in Sources */,
+				8EFE26F6237A36A600FD2802 /* APIResult.swift in Sources */,
+				8EFE26FB237A36A600FD2802 /* GenericStorage.swift in Sources */,
+				8EFE26F2237A36A600FD2802 /* Settings.swift in Sources */,
+				8EFE26F1237A36A600FD2802 /* NetworkService.swift in Sources */,
+				8EFE26DD237A368E00FD2802 /* Package.swift in Sources */,
+				8EFE26F7237A36A600FD2802 /* DebugLogsWriter.swift in Sources */,
+				8EFE26F4237A36A600FD2802 /* JSONEncoding.swift in Sources */,
+				8EFE26F8237A36A600FD2802 /* ModelWithResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,6 +432,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.finch.FNetworkService;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -438,6 +460,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.finch.FNetworkService;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
