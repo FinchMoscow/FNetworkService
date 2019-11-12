@@ -6,6 +6,8 @@
 //  Copyright © 2019 Finch. All rights reserved.
 //
 
+import Foundation
+
 private let endLine = "\n"
 private let separator = "<<<-RESPONSE->>>"
 
