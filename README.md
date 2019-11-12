@@ -1,5 +1,6 @@
 ### Features
 
+- Flexible
 - Codable/Decodable response
 - Soft to construct requests
 
@@ -14,9 +15,12 @@
 2. [Settings](#Settings)
 3. [Log Writer](#Log-Writer)
 4. [Constructing Endpoints](#Constructing-Endpoints)
-5. [Built With](#Built-With)
-6. [Authors](#Authors)
-7. [License](#License)
+5. [Extending NetworkService](#Extending-NetworkService)
+6. [Substitution](#Substitution)
+7. [Typealiases](#Typealiases)
+8. [Built With](#Built-With)
+9. [Authors](#Authors)
+10. [License](#License)
 
 
 
@@ -38,28 +42,40 @@ networkService.request(endpoint: EndpointProtocol, completion: <(Result<Decodabl
 Use `public typealias APIResult<Model> = Swift.Result<Model, APIError>` in a completion block in order to explicitly specify Codable Type
 
 ```
-networkService.request(endpoint: EndpointProtocol) { [weak self] (result: APIResult<AnyResponse>) in
+networkService.request(endpoint: EndpointProtocol) { [weak self] (result: APIResult<Data>) in
+    // handle response
+}
+        
+networkService.request(endpoint: EndpointProtocol, isCahingEnabled: Bool) { [weak self] (result: APIResult<AnyResponse>) in
+    // handle response
+}
+        
+networkService.request(endpoint: EndpointProtocol, isCahingEnabled: Bool) { ([weak self] (result: APIXResult<AnyResponse>) in
+    // handle response
 }
 ```
 
 
 ### Settings
 
-Set up project settings which will be used by every NetworkService's instance
+Settings which will be used by **every** NetworkService's instance
 ```
 NetworkService.Settings.defaultLogger: NetworkLogsWriter? // nil by default
 NetworkService.Settings.defaultDebugLogger: NetworkLogWriter // DebugLogWriter by default
+NetworkService.Settings.defaultRequestSettings: RequestSettingsProtocol //  RequestSettings by default. It contains additionalHeaders which is nil by default. They will be merged with Endpoint's headers, if set.
 ```
 
-Set up settings appropriately for NetworkService instance
+Setting up  NetworkService instance
 ```
-var settings: NetworkService.Setting = .default
-settings.validCodes: Range<Int>
-settings.cacheRequestTimeout: TimeInterval
-settings.requestTimeout: TimeInterval
-settings.dateDecodingStrategy: JSONDecoder.DateDecodingStrategy
-settings.networkLogger: NetworkLogsWriter?
-settings.debugLogger: NetworkLogWriter
+let settings: NetworkService.Setting = .default
+settings.validCodes: Range<Int> = ..
+settings.cacheRequestTimeout: TimeInterval = ...
+settings.requestTimeout: TimeInterval = ...
+settings.completionQueue: DispatchQueue = ...
+settings.requestSettings: RequestSettingsProtocol = ...
+settings.dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = ...
+settings.networkLogger: NetworkLogsWriter? = ...
+settings.debugLogger: NetworkLogWriter = ...
 
 let configuratedNetworkService = NetworkService(settings: settings)
 ```
@@ -97,11 +113,14 @@ NetworkService.Settings.debugLogger = MyLogWriter()
 `struct example`
 
 ```
-struct GoogleEndpoint: EndpointProtocol {
-    var baseUrl: URL? = URL(string: "https://www.google.com/")
-    var path: String = ""
-    var method: HTTPMethod = .get
-    var parameters: Parameters? = nil
+struct ProfileEnpoint: EndpointProtocol {
+
+    init(id: String) { self.id = id }
+
+    let baseUrl: URL? = URL(string: "https://www.myprofile.com/")
+    let path: String = "pofile"
+    let method: HTTPMethod = .get
+    let parameters: Parameters? = ["id": id]
 }
 ```
 
@@ -117,8 +136,8 @@ enum GoogleEndpoint: EndpointProtocol {
     
     var path: String {
         switch self {
-        case .main:             return ""
-        case .search(let path): return path
+        case .main:                  return ""
+        case .search(let path):  return path
         }
     }
     
@@ -130,6 +149,62 @@ var encoding: ParameterEncoding
 var headers: HTTPHeaders?
 var cacheKey: String?
 ```
+
+### Extending NetworkService
+
+```
+class MyNetworkService: NetworkService
+
+    init(settings: NetworkService.Settings = Settings.default) {
+        
+        settings.requestSettings.additionalHeaders = ["MyHeaderKey": "MyheaderValue"]
+        
+        if (debug) {
+            settings.debugLogger?.writeOptions = .none
+        }
+        
+        super.init(settings: settings)
+    }
+    
+    override func request(endpoint: EndpointProtocol, completion: @escaping (APIResult<Data>) -> Void) {
+        myUsefulMethod()
+        super.request(endpoint: endpoint, completion: completion)
+    }
+    
+    // triggers after response comes
+    override func parse(response: DefaultDataResponse, forEndpoint endpoint: EndpointProtocol) -> APIResult<Data> {
+        anotherUsefulMethod()
+        return super.parse(response: response, forEndpoint: endpoint)
+    }
+    
+**Subsctituition**
+
+
+```
+
+### Substitution
+
+```
+var networkService: NetworkServiceProtocol = NetworkService()
+networkService = MyNetworkService()
+```
+
+
+### Typealiases
+
+```
+public typealias NetworkServiceProtocol = NetworkRequestable & ResponseParser
+
+public typealias Parameters = [String: Any]
+public typealias HTTPHeaders = [String: String]
+public typealias HTTPMethod = Alamofire.HTTPMethod
+public typealias Headers = HTTPHeaders
+
+public typealias APIResult<Model> = Swift.Result<Model, APIError>
+public typealias APIXResult<Model> = Swift.Result<ModelWithResponse<Model>, APIError>
+
+```
+
 ### Built With
 
 * [Alamofire](https://github.com/Alamofire/Alamofire)
