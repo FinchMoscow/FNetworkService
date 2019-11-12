@@ -18,7 +18,7 @@ public struct ModelWithResponse<Model> {
     
     // MARK: - Init
     
-    init(model: Model, response: HTTPURLResponse?) {
+    public init(model: Model, response: HTTPURLResponse?) {
         self.model = model
         self.response = response
     }
