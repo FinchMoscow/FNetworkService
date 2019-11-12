@@ -10,7 +10,7 @@ import Foundation
 
 extension NetworkService {
 
-    public struct Settings {
+    public class Settings {
         
         public var validCodes = (200 ..< 300)
         public var cacheRequestTimeout: TimeInterval = 0.3

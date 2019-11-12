@@ -29,7 +29,7 @@ open class NetworkService: NetworkServiceProtocol {
     
     // MARK: - Properties
     
-    private(set) public var settings: Settings
+    public let settings: Settings
 
     private let alamofireManager: SessionManager
     private let cacheStorage: Storage
