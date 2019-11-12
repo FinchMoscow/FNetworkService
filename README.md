@@ -176,9 +176,6 @@ class MyNetworkService: NetworkService
         anotherUsefulMethod()
         return super.parse(response: response, forEndpoint: endpoint)
     }
-    
-**Subsctituition**
-
 
 ```
 
