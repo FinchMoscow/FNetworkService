@@ -16,14 +16,15 @@ let package = Package(
     ],
     
     dependencies: [
-    .package(url: "https://github.com/Alamofire/Alamofire.git",
-             from: "4.8.2")
+        .package(url: "https://github.com/Alamofire/Alamofire.git",
+                 from: "4.8.2")
     ],
     
     targets: [
         .target(
             name: "FNetworkService",
             dependencies: [
-                .byName(name: "Alamofire"),
+                .byName(name: "Alamofire")
+            ])
     ]
 )
