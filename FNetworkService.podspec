@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://github.com/FinchMoscow/FNetworkService.git", :tag => "#{s.version}" }
 
-  s.source_files = "FNetworkService/**/*.{swift}"
+  s.source_files = "Sources/FNetworkService/**/*.{swift}"
 
   s.dependency 'Alamofire'
 

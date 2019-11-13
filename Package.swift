@@ -12,12 +12,14 @@ let package = Package(
     ],
    
     products: [
-        .library(name: "FNetworkService", targets: ["FNetworkService"])
+        .library(
+            name: "FNetworkService",
+            targets: ["FNetworkService"]),
     ],
     
     dependencies: [
-        .package(url: "https://github.com/Alamofire/Alamofire.git",
-                 from: "4.8.2")
+    .package(url: "https://github.com/Alamofire/Alamofire.git",
+             from: "4.8.2")
     ],
     
     targets: [
@@ -25,6 +27,7 @@ let package = Package(
             name: "FNetworkService",
             dependencies: [
                 .byName(name: "Alamofire")
-            ])
+        ])
     ]
 )
+
