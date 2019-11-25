@@ -21,7 +21,7 @@
 		5CDF4E0D22709982006C1764 /* CommonHTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0122709982006C1764 /* CommonHTTPHeader.swift */; };
 		5CDF4E0F22709982006C1764 /* LoggerWriteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0322709982006C1764 /* LoggerWriteOptions.swift */; };
 		5CDF4E1022709982006C1764 /* EndpointProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0522709982006C1764 /* EndpointProtocol.swift */; };
-		5CDF4E1222709982006C1764 /* LoggerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0722709982006C1764 /* LoggerProtocol.swift */; };
+		5CDF4E1222709982006C1764 /* NetworkLogWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E0722709982006C1764 /* NetworkLogWriter.swift */; };
 		5CDF4E142270AF27006C1764 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDF4E132270AF26006C1764 /* NetworkService.swift */; };
 		6EF058DD947BE23D0A2AA0DA /* libPods-FNetworkService.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22D709BFDBD310DEF5327073 /* libPods-FNetworkService.a */; };
 		8E925EA222E9E4F500ADFFCD /* ModelWithResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E925EA122E9E4F500ADFFCD /* ModelWithResponse.swift */; };
@@ -46,7 +46,7 @@
 		5CDF4E0122709982006C1764 /* CommonHTTPHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonHTTPHeader.swift; sourceTree = "<group>"; };
 		5CDF4E0322709982006C1764 /* LoggerWriteOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerWriteOptions.swift; sourceTree = "<group>"; };
 		5CDF4E0522709982006C1764 /* EndpointProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointProtocol.swift; sourceTree = "<group>"; };
-		5CDF4E0722709982006C1764 /* LoggerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggerProtocol.swift; sourceTree = "<group>"; };
+		5CDF4E0722709982006C1764 /* NetworkLogWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkLogWriter.swift; sourceTree = "<group>"; };
 		5CDF4E132270AF26006C1764 /* NetworkService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		8E925EA122E9E4F500ADFFCD /* ModelWithResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWithResponse.swift; sourceTree = "<group>"; };
 		EC5AE4B0F17A3D1237480942 /* Pods-FNetworkService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FNetworkService.release.xcconfig"; path = "Target Support Files/Pods-FNetworkService/Pods-FNetworkService.release.xcconfig"; sourceTree = "<group>"; };
@@ -122,7 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				5CDF4E0522709982006C1764 /* EndpointProtocol.swift */,
-				5CDF4E0722709982006C1764 /* LoggerProtocol.swift */,
+				5CDF4E0722709982006C1764 /* NetworkLogWriter.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -261,7 +261,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C53ADA6228D6FA400470F9C /* DebugLogsWriter.swift in Sources */,
-				5CDF4E1222709982006C1764 /* LoggerProtocol.swift in Sources */,
+				5CDF4E1222709982006C1764 /* NetworkLogWriter.swift in Sources */,
 				5CDF4E0822709982006C1764 /* Optional+stringValue.swift in Sources */,
 				8E925EA222E9E4F500ADFFCD /* ModelWithResponse.swift in Sources */,
 				5C8BAF032372DFA3006C60B2 /* RequestSettings.swift in Sources */,
@@ -423,6 +423,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.finch.FNetworkService;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -450,6 +451,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.finch.FNetworkService;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;

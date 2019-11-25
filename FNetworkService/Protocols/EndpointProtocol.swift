@@ -13,8 +13,8 @@ import Alamofire
 public typealias Parameters = [String: Any]
 /// A dictionary of headers to apply to a `URLRequest`
 public typealias HTTPHeaders = [String: String]
+/// Enum HTTP method
 public typealias HTTPMethod = Alamofire.HTTPMethod
-public typealias Headers = HTTPHeaders
 
 public protocol EndpointProtocol {
     

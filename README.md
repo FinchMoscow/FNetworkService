@@ -195,7 +195,6 @@ public typealias NetworkServiceProtocol = NetworkRequestable & ResponseParser
 public typealias Parameters = [String: Any]
 public typealias HTTPHeaders = [String: String]
 public typealias HTTPMethod = Alamofire.HTTPMethod
-public typealias Headers = HTTPHeaders
 
 public typealias APIResult<Model> = Swift.Result<Model, APIError>
 public typealias APIXResult<Model> = Swift.Result<ModelWithResponse<Model>, APIError>

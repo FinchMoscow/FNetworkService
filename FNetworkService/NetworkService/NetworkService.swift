@@ -321,7 +321,6 @@ open class NetworkService: NetworkServiceProtocol {
     
     
     // MARK: - Request with boxed Response into `ModelWithResponse`, no cache
-    
     open func request<Response: Decodable>(endpoint: EndpointProtocol, completion: @escaping (APIXResult<Response>) -> Void) {
         
         guard let baseUrl = endpoint.baseUrl else {
@@ -356,7 +355,6 @@ open class NetworkService: NetworkServiceProtocol {
     
     
     // MARK: - Request with boxed Response into `ModelWithResponse`, with cache
-    
     open func requestWithCache<Response: Codable>(endpoint: EndpointProtocol, completion: @escaping (APIXResult<Response>) -> Void) {
         
         guard let baseUrl = endpoint.baseUrl else {

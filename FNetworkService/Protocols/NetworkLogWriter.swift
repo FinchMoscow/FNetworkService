@@ -1,5 +1,5 @@
 //
-//  LoggerProtocol.swift
+//  NetworkLogWriter.swift
 //  FNetworkService
 //
 //  Created by Eugene on 25/03/2019.
