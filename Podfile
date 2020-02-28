@@ -1,5 +1,5 @@
 target 'FNetworkService' do
 
-   pod 'Alamofire'
+   pod 'Alamofire', '~> 4.9.1'
 
 end
