@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 
   s.source_files = "FNetworkService/**/*.{swift}"
 
-  s.dependency 'Alamofire'
+  s.dependency 'Alamofire', '~> 4.9.1'
 
   s.swift_version = "5"
 
