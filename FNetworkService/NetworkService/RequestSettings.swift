@@ -9,16 +9,14 @@
 public protocol RequestSettingsProtocol {
     
     var additionalHeaders: [String: String]? { get set }
-    
 }
 
 extension NetworkService {
     
     public final class RequestSettings: RequestSettingsProtocol {
         
-        /// if set, will be merged with each endpoint's headers
+        /// if set, will be merged with endpoint's headers
         public var additionalHeaders: [String: String]?
-        
     }
     
 }

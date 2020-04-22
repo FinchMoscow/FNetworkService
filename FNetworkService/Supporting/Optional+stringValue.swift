@@ -11,7 +11,6 @@ import Foundation
 extension Optional {
     
     var stringValue: String {
-        
         switch self {
         case .some(let value):
             return String(describing: value)

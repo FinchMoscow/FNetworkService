@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target    = '9.0'
   s.tvos.deployment_target   = '10.0'
   s.name                     = "FNetworkService"
-  s.version                  = "0.2.1"
+  s.version                  = "0.2.2"
   s.summary                  = "Is a wrapper around Alamofire"
   s.requires_arc             = true
 

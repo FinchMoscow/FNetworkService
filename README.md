@@ -1,6 +1,7 @@
 ### Features
 
 - Flexible
+- Closure API
 - Codable/Decodable response
 - Soft to construct requests
 
@@ -65,7 +66,7 @@ NetworkService.Settings.defaultDebugLogger: NetworkLogWriter // DebugLogWriter b
 NetworkService.Settings.defaultRequestSettings: RequestSettingsProtocol //  RequestSettings by default. It contains additionalHeaders which is nil by default. They will be merged with Endpoint's headers, if set.
 ```
 
-Setting up  NetworkService instance
+Setting up NetworkService instance
 ```
 let settings: NetworkService.Setting = .default
 settings.validCodes: Range<Int> = ..
@@ -74,6 +75,7 @@ settings.requestTimeout: TimeInterval = ...
 settings.completionQueue: DispatchQueue = ...
 settings.requestSettings: RequestSettingsProtocol = ...
 settings.dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = ...
+settings.keysDecodingStrategy: JSONDecoder.KeyDecodingStrategy = ...
 settings.networkLogger: NetworkLogsWriter? = ...
 settings.debugLogger: NetworkLogWriter = ...
 

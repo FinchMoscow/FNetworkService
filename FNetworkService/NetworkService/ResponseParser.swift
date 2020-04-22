@@ -11,7 +11,8 @@ import Alamofire
 public protocol ResponseParser {
     
     func parse(response: DefaultDataResponse, forEndpoint endpoint: EndpointProtocol) -> APIResult<Data>
-    func parse<Response: Decodable>(response: DefaultDataResponse, forEndpoint endpoint: EndpointProtocol) -> APIResult<Response>
-    func parse<Response: Decodable>(response: DefaultDataResponse, forEndpoint endpoint: EndpointProtocol) -> APIXResult<Response>
     
+    func parse<Response: Decodable>(response: DefaultDataResponse, forEndpoint endpoint: EndpointProtocol) -> APIResult<Response>
+    
+    func parse<Response: Decodable>(response: DefaultDataResponse, forEndpoint endpoint: EndpointProtocol) -> APIXResult<Response>
 }
