@@ -17,7 +17,6 @@ extension NetworkService {
         public var requestTimeout: TimeInterval = 10
         public var completionQueue: DispatchQueue = .main
         public var dateDecodingStrategy = JSONDecoder.DateDecodingStrategy.millisecondsSince1970
-        public var keyDecodingStrategy = JSONDecoder.KeyDecodingStrategy.useDefaultKeys
         public var requestSettings: RequestSettingsProtocol = Settings.defaultRequestSettings
         public var networkLogger: NetworkLogWriter? = Settings.defaultLogger
         public var debugLogger: NetworkLogWriter? = Settings.defaultDebugLogger
@@ -25,7 +24,6 @@ extension NetworkService {
         public lazy var decoder: JSONDecoder = {
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = self.dateDecodingStrategy
-            decoder.keyDecodingStrategy = self.keyDecodingStrategy
             return decoder
         }()
         

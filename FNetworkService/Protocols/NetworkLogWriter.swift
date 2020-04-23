@@ -33,7 +33,7 @@ public extension NetworkLogWriter {
         case .failure(let error):
             resultText = "ERROR:\(endLine)" + errorDescription(error: error, data: data)
         case .success:
-            resultText = "SUCCESS:\(endLine)" + dataDescription(data: data)
+            resultText = "SUCCESS:\(endLine)" + dataDescription(data)
         }
         
         let networkLog = endpointLog + resultText
@@ -48,9 +48,9 @@ public extension NetworkLogWriter {
     
     // MARK: - Private helpers
     
-    private func dataDescription(data: Data?) -> String {
-        let descriptionEntry = "Response body: "
-        guard let data = data else { return descriptionEntry + "Empty body!" }
+    private func dataDescription(_ data: Data?) -> String {
+        let descriptionEntry = "Response body:"
+        guard let data = data else { return descriptionEntry + " Empty body!" }
         return descriptionEntry + endLine + (String(data: data, encoding: .utf8) ?? "Failed to convert Data to String") + endLine
     }
     
@@ -64,16 +64,16 @@ public extension NetworkLogWriter {
             
         case .requestTimeout:
             var description = error.localizedDescription + endLine
-            description += dataDescription(data: data)
+            description += dataDescription(data)
             return description
             
         case .decodingError:
-            return error.localizedDescription + endLine + dataDescription(data: data)
+            return error.localizedDescription + endLine + dataDescription(data)
             
         case let .serverError(error, response, data):
             var description = error?.localizedDescription ?? "(nil)" + endLine
             description += "Status code: " + (response?.statusCode == nil ? "(nil)" : "\(response!.statusCode)")
-            description += dataDescription(data: data)
+            description += dataDescription(data)
             return description
         }
     }
@@ -89,16 +89,16 @@ public extension NetworkLogWriter {
 extension NetworkLogWriter {
     
     func shouldPerformLogging(isResultSuccess: Bool) -> Bool {
-        
-        if isResultSuccess && (writeOptions == .onSuccess || writeOptions == .all) {
+        switch writeOptions {
+        case .all:
             return true
+        case .onSuccess:
+            return isResultSuccess
+        case .onError:
+            return !isResultSuccess
+        case .none:
+            return false
         }
-        
-        if !isResultSuccess && (writeOptions == .onError || writeOptions == .all) {
-            return true
-        }
-        
-        return false
     }
     
 }
