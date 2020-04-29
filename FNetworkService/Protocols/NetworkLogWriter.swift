@@ -17,23 +17,23 @@ public protocol NetworkLogWriter: AnyObject {
     func write<T>(endpoint: EndpointProtocol, result: APIResult<T>, data: Data?)
 }
 
-// MARK: - NetworkLogsWriter default implementation
+// MARK: - NetworkLogWriter default implementation
 public extension NetworkLogWriter {
     
     func write<T>(endpoint: EndpointProtocol, result: APIResult<T>, data: Data?) {
         
         guard shouldPerformLogging(isResultSuccess: result.isSuccess) else { return }
         
-        var endpointLog = "\(currentDate)\(endLine)"
+        var endpointLog = "[FNetworkService log] \(currentDate)\(endLine)"
         endpointLog += endpoint.description + endLine
         
         let resultText: String
         
         switch result {
         case .failure(let error):
-            resultText = "ERROR: " + errorDescription(error: error, data: data)
+            resultText = "ERROR:\(endLine)" + errorDescription(error: error, data: data)
         case .success:
-            resultText = "SUCCESS"
+            resultText = "SUCCESS:\(endLine)" + dataDescription(data)
         }
         
         let networkLog = endpointLog + resultText
@@ -44,18 +44,17 @@ public extension NetworkLogWriter {
     var dateLocale: Locale {
         return Locale(identifier: "en_US")
     }
-    
+
     
     // MARK: - Private helpers
     
+    private func dataDescription(_ data: Data?) -> String {
+        let descriptionEntry = "Response body:"
+        guard let data = data else { return descriptionEntry + " Empty body!" }
+        return descriptionEntry + endLine + (String(data: data, encoding: .utf8) ?? "Failed to convert Data to String") + endLine
+    }
+    
     private func errorDescription(error: APIError, data: Data?) -> String {
-        
-        func dataDescription(_ data: Data?) -> String {
-            let descriptionEntry = "Response body: "
-            guard let data = data else { return descriptionEntry + "Empty body!" }
-            return descriptionEntry + endLine + (String(data: data, encoding: .utf8) ?? "Failed to convert Data to String") + endLine
-        }
-        
         switch error {
         case .noBaseUrl:
             return error.localizedDescription + endLine
@@ -77,13 +76,11 @@ public extension NetworkLogWriter {
             description += dataDescription(data)
             return description
         }
-        
     }
     
     private var currentDate: String {
         return String(describing: Date().description(with: dateLocale))
     }
-    
 }
 
 
@@ -91,20 +88,16 @@ public extension NetworkLogWriter {
 extension NetworkLogWriter {
     
     func shouldPerformLogging(isResultSuccess: Bool) -> Bool {
-        
-        if writeOptions == .all { return true }
-        if writeOptions == .none { return false }
-        
-        if isResultSuccess && writeOptions == .onSuccess {
+        switch writeOptions {
+        case .all:
             return true
+        case .onSuccess:
+            return isResultSuccess
+        case .onError:
+            return !isResultSuccess
+        case .none:
+            return false
         }
-        
-        if !isResultSuccess && writeOptions == .onError {
-            return true
-        }
-        
-        return false
     }
-    
 }
 

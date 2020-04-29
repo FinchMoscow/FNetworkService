@@ -19,7 +19,6 @@ extension NetworkService {
         public var dateDecodingStrategy = JSONDecoder.DateDecodingStrategy.millisecondsSince1970
         public var requestSettings: RequestSettingsProtocol = Settings.defaultRequestSettings
         public var networkLogger: NetworkLogWriter? = Settings.defaultLogger
-        public var debugLogger: NetworkLogWriter? = Settings.defaultDebugLogger
         
         public lazy var decoder: JSONDecoder = {
             let decoder = JSONDecoder()
@@ -44,11 +43,7 @@ extension NetworkService {
         
         /// Implement and assign your logger, it'll be used by every instance as default.
         /// In order to change logger in particular NetworkService you may use `init(settings: NetworkService.Settings)`
-        public static var defaultLogger: NetworkLogWriter?
-        
-        /// Implement and assign your debug logger if needed.
-        /// In order to change debug logger in particular NetworkService you may use `init(settings: NetworkService.Settings)`
-        public static var defaultDebugLogger: NetworkLogWriter = DebugLogWriter()
+        public static var defaultLogger: NetworkLogWriter? = DebugLogWriter()
     }
     
 }

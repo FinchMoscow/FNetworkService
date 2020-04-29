@@ -1,6 +1,7 @@
 ### Features
 
 - Flexible
+- Closure API
 - Codable/Decodable response
 - Soft to construct requests
 
@@ -58,24 +59,22 @@ networkService.request(endpoint: EndpointProtocol, isCahingEnabled: Bool) { ([we
 
 ### Settings
 
-Settings which will be used by **every** NetworkService's instance
+Settings which will be used by **each** NetworkService's instance
 ```
-NetworkService.Settings.defaultLogger: NetworkLogsWriter? // nil by default
-NetworkService.Settings.defaultDebugLogger: NetworkLogWriter // DebugLogWriter by default
+NetworkService.Settings.defaultLogger: NetworkLogsWriter? // DebugLogWriter by default
 NetworkService.Settings.defaultRequestSettings: RequestSettingsProtocol //  RequestSettings by default. It contains additionalHeaders which is nil by default. They will be merged with Endpoint's headers, if set.
 ```
 
-Setting up  NetworkService instance
+Setting up NetworkService instance
 ```
 let settings: NetworkService.Setting = .default
-settings.validCodes: Range<Int> = ..
-settings.cacheRequestTimeout: TimeInterval = ...
-settings.requestTimeout: TimeInterval = ...
-settings.completionQueue: DispatchQueue = ...
-settings.requestSettings: RequestSettingsProtocol = ...
-settings.dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = ...
-settings.networkLogger: NetworkLogsWriter? = ...
-settings.debugLogger: NetworkLogWriter = ...
+settings.validCodes: Range<Int> = ..                                    // (200 ..< 300) by default
+settings.cacheRequestTimeout: TimeInterval = ...                        // 0.3 by default
+settings.requestTimeout: TimeInterval = ...                             // 10 by default
+settings.completionQueue: DispatchQueue = ...                           // .main by default
+settings.dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = ...   // JSONDecoder.DateDecodingStrategy.millisecondsSince1970 by default
+settings.requestSettings: RequestSettingsProtocol = ...                 // Settings.defaultRequestSettings by default
+settings.networkLogger: NetworkLogsWriter? = ...                        // Settings.defaultLogger by default
 
 let configuratedNetworkService = NetworkService(settings: settings)
 ```
@@ -91,7 +90,7 @@ Change debug logger behaviour
 NetworkService.Settings.defaultDebugLogger.writeOptions = .none
 ```
 
-Implement logs writer for your purposes.
+Implement logs writer for your purposes
 
 ```
 class MyLogWriter: NetworkLogsWriter {
@@ -104,7 +103,6 @@ class MyLogWriter: NetworkLogsWriter {
 }
 
 NetworkService.Settings.networkLogger = MyLogWriter()
-NetworkService.Settings.debugLogger = MyLogWriter()
 ```
 
 
@@ -136,7 +134,7 @@ enum GoogleEndpoint: EndpointProtocol {
     
     var path: String {
         switch self {
-        case .main:                  return ""
+        case .main:              return ""
         case .search(let path):  return path
         }
     }

@@ -56,7 +56,6 @@ public enum APIError: Error {
 extension APIError: Equatable {
     
     public static func == (lhs: APIError, rhs: APIError) -> Bool {
-        
         switch (lhs, rhs) {
         case (.noBaseUrl, .noBaseUrl):
             return true

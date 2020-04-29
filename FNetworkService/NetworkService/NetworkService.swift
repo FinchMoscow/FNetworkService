@@ -31,7 +31,7 @@ open class NetworkService: NetworkServiceProtocol {
     
     public let settings: Settings
 
-    private let alamofireManager: SessionManager
+    private let alamofireManager: Alamofire.SessionManager
     private let cacheStorage: Storage
     
     
@@ -134,7 +134,6 @@ open class NetworkService: NetworkServiceProtocol {
         
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.settings.networkLogger?.write(endpoint: endpoint, result: result, data: data)
-            self?.settings.debugLogger?.write(endpoint: endpoint, result: result, data: data)
         }
         
     }
@@ -154,7 +153,6 @@ open class NetworkService: NetworkServiceProtocol {
         
         let url = baseUrl.appendingPathComponent(endpoint.path)
         let headers = mergeHeaders(endpointHeaders: endpoint.headers)
-        
         alamofireManager.request(url,
                                  method: endpoint.method,
                                  parameters: endpoint.parameters,

@@ -6,9 +6,6 @@
 //  Copyright © 2019 Finch. All rights reserved.
 //
 
-private let endLine = "\n"
-private let separator = "<<<-RESPONSE->>>"
-
 final class DebugLogWriter: NetworkLogWriter {
     
     var writeOptions: LoggerWriteOptions = .all
@@ -19,10 +16,6 @@ final class DebugLogWriter: NetworkLogWriter {
     
     var dateLocale: Locale {
         return Locale(identifier: "en_US")
-    }
-    
-    private var currentDate: String {
-        return String(describing: Date().description(with: dateLocale))
     }
     
 }

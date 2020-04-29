@@ -45,7 +45,6 @@ public extension EndpointProtocol {
     var cacheKey: String? {
         return nil
     }
-    
 }
 
 
@@ -54,11 +53,11 @@ public extension EndpointProtocol {
     var description: String {
         
         let domain = baseUrl?.absoluteString ?? "Domain missed!"
-        var endpointLog = "\(method.rawValue) Request: \(domain)\(path)\n"
+        var endpointLog = "\(method.rawValue) request: \(domain)\(path)\n"
         endpointLog += "with parameters: \(parameters.stringValue)\n"
-        endpointLog += "headers: \(headers.stringValue)"
+        endpointLog += "headers: \(headers.stringValue)\n"
+        endpointLog += "cacheKey: \(cacheKey.stringValue)"
         
         return endpointLog
     }
-        
 }
