@@ -134,7 +134,6 @@ open class NetworkService: NetworkServiceProtocol {
         
         DispatchQueue.global(qos: .background).async { [weak self] in
             self?.settings.networkLogger?.write(endpoint: endpoint, result: result, data: data)
-            self?.settings.debugLogger?.write(endpoint: endpoint, result: result, data: data)
         }
         
     }

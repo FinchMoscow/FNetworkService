@@ -17,7 +17,7 @@ public protocol NetworkLogWriter: AnyObject {
     func write<T>(endpoint: EndpointProtocol, result: APIResult<T>, data: Data?)
 }
 
-// MARK: - NetworkLogsWriter default implementation
+// MARK: - NetworkLogWriter default implementation
 public extension NetworkLogWriter {
     
     func write<T>(endpoint: EndpointProtocol, result: APIResult<T>, data: Data?) {
