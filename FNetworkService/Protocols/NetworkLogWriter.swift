@@ -24,7 +24,7 @@ public extension NetworkLogWriter {
         
         guard shouldPerformLogging(isResultSuccess: result.isSuccess) else { return }
         
-        var endpointLog = "\(currentDate)\(endLine)"
+        var endpointLog = "[FNetworkService log] \(currentDate)\(endLine)"
         endpointLog += endpoint.description + endLine
         
         let resultText: String
@@ -44,7 +44,7 @@ public extension NetworkLogWriter {
     var dateLocale: Locale {
         return Locale(identifier: "en_US")
     }
-    
+
     
     // MARK: - Private helpers
     
@@ -81,7 +81,6 @@ public extension NetworkLogWriter {
     private var currentDate: String {
         return String(describing: Date().description(with: dateLocale))
     }
-    
 }
 
 
@@ -100,6 +99,5 @@ extension NetworkLogWriter {
             return false
         }
     }
-    
 }
 
