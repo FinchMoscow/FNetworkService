@@ -68,13 +68,13 @@ NetworkService.Settings.defaultRequestSettings: RequestSettingsProtocol //  Requ
 Setting up NetworkService instance
 ```
 let settings: NetworkService.Setting = .default
-settings.validCodes: Range<Int> = ..									// (200 ..< 300) by default
-settings.cacheRequestTimeout: TimeInterval = ...						// 0.3 by default
-settings.requestTimeout: TimeInterval = ...								// 10 by default
-settings.completionQueue: DispatchQueue = ...							// .main by default
+settings.validCodes: Range<Int> = ..                                    // (200 ..< 300) by default
+settings.cacheRequestTimeout: TimeInterval = ...                        // 0.3 by default
+settings.requestTimeout: TimeInterval = ...                             // 10 by default
+settings.completionQueue: DispatchQueue = ...                           // .main by default
 settings.dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = ...   // JSONDecoder.DateDecodingStrategy.millisecondsSince1970 by default
-settings.requestSettings: RequestSettingsProtocol = ...					// Settings.defaultRequestSettings by default
-settings.networkLogger: NetworkLogsWriter? = ... 						// Settings.defaultLogger by default
+settings.requestSettings: RequestSettingsProtocol = ...                 // Settings.defaultRequestSettings by default
+settings.networkLogger: NetworkLogsWriter? = ...                        // Settings.defaultLogger by default
 
 let configuratedNetworkService = NetworkService(settings: settings)
 ```
